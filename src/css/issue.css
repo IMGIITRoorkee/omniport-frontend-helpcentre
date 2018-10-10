@@ -1,0 +1,39 @@
+@charset "UTF-8";
+.issue-container {
+    margin-top: 20px;
+}
+
+.issue-opener {
+    margin-left: 5px;
+    color: #586069;
+
+}
+
+.issue-opener .user {
+    font-weight: bold;
+}
+
+.assigned-to {
+    display: inline;
+}
+
+.heading {
+    margin-bottom: 20px;
+    width: 66%;
+}
+
+.add-reply {
+    padding: 0;
+    display: inline;
+}
+
+.add-reply .textarea {
+    margin-top: 0;
+    padding: 0;
+}
+
+.sticky {
+    position: fixed;
+    top: 25px;
+    width: 100%;
+}
