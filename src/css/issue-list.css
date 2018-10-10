@@ -1,0 +1,10 @@
+@charset "UTF-8";
+.sticky {
+    position: fixed;
+    top: 25px;
+    width: 100%;
+}
+
+.issue-list-container {
+    margin-top: 20px;
+}
