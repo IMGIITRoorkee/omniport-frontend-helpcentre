@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { ifRole } from 'formula_one/src/utils'
 import { connect } from 'react-redux'
 import {
@@ -8,15 +8,16 @@ import {
   Button,
   Divider,
   Grid,
-  Sticky,
   Popup,
   Loader,
   Image,
   Card,
-  Modal,
-  Label
+  Modal
 } from 'semantic-ui-react'
 import moment from 'moment'
+import { isBrowser, isMobile } from 'react-device-detect'
+import Emojis from 'react-emoji-component'
+import { emojify } from 'react-emojione'
 
 import SideSegment from './side-segment'
 import PostComment from './post-comment'
@@ -47,7 +48,13 @@ class IssueComment extends Component {
           <Comment.Metadata>
             <span>{moment(datetimeCreated).fromNow()}</span>
           </Comment.Metadata>
-          <Comment.Text styleName='inline.white-space-pre-wrap'>{text}</Comment.Text>
+          <Comment.Text styleName='inline.white-space-pre-wrap'>
+            {isBrowser &&
+              <Emojis size={20} hiDpi>
+                {emojify(text, { output: 'unicode' })}
+              </Emojis>}
+            {isMobile && emojify(text, { output: 'unicode' })}
+          </Comment.Text>
         </Comment.Content>
       </Comment>
     )
@@ -73,17 +80,23 @@ class Issue extends Component {
     ChangeStatusActiveIssue(id, !activeIssue['isClosed'])
   }
 
-  handleContextRef = contextRef => this.setState({ contextRef })
-
   render () {
-    const { contextRef } = this.state
     const { activeIssue, whoAmI } = this.props
     const id = this.props.match.params.id
     return activeIssue
-      ? <div styleName='block.issue-container' ref={this.handleContextRef}>
+      ? <div styleName='block.issue-container'>
         <Grid textAlign='justified'>
+          {isMobile &&
           <Grid.Row>
-            <Grid.Column width={10} styleName='block.heading'>
+            <Grid.Column width={16}>
+              <SideSegment id={id} />
+            </Grid.Column>
+          </Grid.Row>}
+          <Grid.Row>
+            <Grid.Column
+              width={isBrowser ? 10 : 16}
+              styleName='block.heading'
+              >
               <Header as='h1'>{activeIssue['title']}</Header>
               {activeIssue.isClosed === true
                   ? <Popup
@@ -123,25 +136,25 @@ class Issue extends Component {
                     position='left center'
                     />}
               <span styleName='block.issue-opener'>
-                <span styleName='block.user'>
-                  {activeIssue['uploader']
-                      ? activeIssue['uploader']['fullName']
-                      : ''}
-                </span>
-                {' '}
-                  opened this query
-                  {' '}
-                {moment(activeIssue['datetimeCreated']).fromNow()}
-                {' '}
-                  in
-                  {' '}
-                {activeIssue.appName}
-                <b>{' '}·</b>
-                {' '}
-                {activeIssue['comments'] ? activeIssue['comments'].length : 0}
-                {' '}
-                  comments
-                </span>
+                {isBrowser &&
+                <span>
+                  <span styleName='block.user'>
+                    {activeIssue['uploader']
+                          ? activeIssue['uploader']['fullName']
+                          : ''}
+                  </span>
+                  {' '} opened this query {' '}
+                  {moment(activeIssue['datetimeCreated']).fromNow()}
+                  {' '} in {' '}
+                  {activeIssue.appName}
+                  <b>{' '}·{' '}</b>
+                </span>}
+                {activeIssue['comments']
+                    ? activeIssue['comments'].length === 1
+                        ? '1 comment'
+                        : `${activeIssue['comments'].length} comments`
+                    : false}
+              </span>
               <Divider />
               <Comment.Group>
                 <Comment styleName='inline.margin-bottom-1_5em'>
@@ -163,35 +176,37 @@ class Issue extends Component {
                     </Comment.Metadata>
                     <Comment.Text styleName='inline.white-space-pre-wrap'>
                       {activeIssue['query']}
-                      {activeIssue['uploadedFile'] ?
-                          (RegExp('^\.|\.jpg$|\.gif$|.png$').test(activeIssue['uploadedFile']))
-                          ? <Modal
-                            dimmer='blurring'
-                            trigger={
-                              <Card
-                                image={activeIssue['uploadedFile']}
-                                alt={activeIssue['id']}
-                                />
-                              }
-                            basic
-                            fluid
-                            >
-                            <Image
-                              src={activeIssue['uploadedFile']}
-                              wrapped
-                              size={'massive'}
-                              />
-                          </Modal>
-                          : <div>
-                            <a
-                              href={activeIssue['uploadedFile']}
-                              target='blank'
-                              >
-                              <Icon name='download' color={'blue'} />
-                              {' '}
-                                Download Attachment
-                              </a>
-                          </div>
+                      {activeIssue['uploadedFile']
+                          ? RegExp('^\.jpg$|\.gif$|.png$|\.jpeg$').test(
+                              activeIssue['uploadedFile']
+                            )
+                              ? <Modal
+                                dimmer='blurring'
+                                trigger={
+                                  <Card
+                                    image={activeIssue['uploadedFile']}
+                                    alt={activeIssue['id']}
+                                    />
+                                  }
+                                basic
+                                fluid
+                                >
+                                <Image
+                                  src={activeIssue['uploadedFile']}
+                                  wrapped
+                                  size={'massive'}
+                                  />
+                              </Modal>
+                              : <div>
+                                <a
+                                  href={activeIssue['uploadedFile']}
+                                  target='blank'
+                                  >
+                                  <Icon name='download' color={'blue'} />
+                                  {' '}
+                                    Download Attachment
+                                  </a>
+                              </div>
                           : null}
                     </Comment.Text>
                   </Comment.Content>
@@ -223,15 +238,14 @@ class Issue extends Component {
                 </Comment>
               </Comment.Group>
             </Grid.Column>
+            {isBrowser &&
             <Grid.Column width={6}>
-              <Sticky context={contextRef} offset={25}>
-                <SideSegment id={id} />
-              </Sticky>
-            </Grid.Column>
+              <SideSegment id={id} />
+            </Grid.Column>}
           </Grid.Row>
         </Grid>
       </div>
-      : <div styleName='block.issue-container' ref={this.handleContextRef}>
+      : <div styleName='block.issue-container'>
         <Loader />
       </div>
   }

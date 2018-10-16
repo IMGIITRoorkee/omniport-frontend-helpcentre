@@ -4,6 +4,7 @@ import {
   Form,
   TextArea,
   Dropdown,
+  Divider,
   Segment,
   Image,
   Dimmer,
@@ -109,7 +110,7 @@ class AddQuery extends Component {
             <Header as={'h3'}>How can we help you?</Header>
           </Segment>
           <Segment>
-            <Form enctype='multiple/form-data'>
+            <Form encType='multiple/form-data'>
               <Form.Field>
                 <label>App</label>
                 <Dropdown
@@ -146,50 +147,49 @@ class AddQuery extends Component {
                   placeholder='Add Query'
                 />
               </Form.Field>
-              <Form.Field>
-                <label htmlFor='uploadPhoto'>
-                  <Button as='a' icon labelPosition='left' primary>
-                    Upload
-                    <Icon name='upload' />
-                  </Button>
-                </label>
-                <input
-                  type='file'
-                  onChange={this.fileChange}
-                  name={'uploadedFile'}
-                  id='uploadPhoto'
-                  styleName='inline.display-none'
-                />
-                <br />
-                {fileSrc
-                  ? uploadedFile['type'].includes('image')
-                      ? <Card>
-                        <Dimmer.Dimmable
-                          blurring
-                          as={Image}
-                          src={fileSrc}
-                          size='medium'
-                          dimmer={{ active, content }}
-                          onMouseEnter={this.handleShow}
-                          onMouseLeave={this.handleHide}
-                          />
-                      </Card>
-                      : <div>
-                        <Label>
-                          <a href={fileSrc} target='blank'>
-                            {uploadedFile['name']}
-                          </a>
-                          {' '}
-                          <span
-                            onClick={this.removeImage}
-                            styleName='inline.cursor-pointer'
-                            >
-                            <Icon name='close' />
-                          </span>
-                        </Label>
-                      </div>
-                  : false}
-              </Form.Field>
+              <label htmlFor='uploadPhoto'>
+                <Button as='a' icon labelPosition='left' primary>
+                  Upload
+                  <Icon name='upload' />
+                </Button>
+              </label>
+              <input
+                type='file'
+                onChange={this.fileChange}
+                name={'uploadedFile'}
+                id='uploadPhoto'
+                styleName='inline.display-none'
+              />
+              <br />
+              {fileSrc
+                ? uploadedFile['type'].includes('image')
+                    ? <Card>
+                      <Dimmer.Dimmable
+                        blurring
+                        as={Image}
+                        src={fileSrc}
+                        size='medium'
+                        dimmer={{ active, content }}
+                        onMouseEnter={this.handleShow}
+                        onMouseLeave={this.handleHide}
+                        />
+                    </Card>
+                    : <div>
+                      <Label>
+                        <a href={fileSrc} target='blank'>
+                          {uploadedFile['name']}
+                        </a>
+                        {' '}
+                        <span
+                          onClick={this.removeImage}
+                          styleName='inline.cursor-pointer'
+                          >
+                          <Icon name='close' />
+                        </span>
+                      </Label>
+                    </div>
+                : false}
+              <Divider />
               <Button
                 type='submit'
                 onClick={this.handleSubmit}

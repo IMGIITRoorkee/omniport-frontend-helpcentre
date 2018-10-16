@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Pagination } from 'semantic-ui-react'
+import { Icon, Pagination } from 'semantic-ui-react'
+import { isMobile } from 'react-device-detect'
 
 import { setIssueList, changePage, setUser, setStatusNumbers } from '../actions'
 
@@ -24,19 +25,33 @@ class TabPagination extends Component {
     return (
       <Pagination
         activePage={this.props.page['index'] && this.props.page['index']}
+        secondary={isMobile}
+        compact={isMobile}
         totalPages={
           this.props.issueList
             ? Math.ceil(this.props.issueList['count'] / 10)
             : '1'
         }
         onPageChange={this.handlePageChange}
-        firstItem={{ 'aria-label': 'First item', content: 'First', key: '1' }}
-        lastItem={{ 'aria-label': 'Last item', content: 'Last', key: '2' }}
-        nextItem={{ 'aria-label': 'Next item', content: 'Next', key: '3' }}
+        firstItem={{
+          'aria-label': 'First item',
+          content: <Icon name='angle double left' />,
+          key: '1'
+        }}
         prevItem={{
           'aria-label': 'Previous item',
-          content: 'Previous',
+          content: <Icon name='angle left' />,
           key: '4'
+        }}
+        nextItem={{
+          'aria-label': 'Next item',
+          content: <Icon name='angle right' />,
+          key: '3'
+        }}
+        lastItem={{
+          'aria-label': 'Last item',
+          content: <Icon name='angle double right' />,
+          key: '2'
         }}
       />
     )

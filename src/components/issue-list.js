@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Route, Router, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Grid, List, Segment } from 'semantic-ui-react'
+import { Grid, Header, List, Segment } from 'semantic-ui-react'
 import moment from 'moment'
 
 import { ifRole } from 'formula_one/src/utils'
@@ -26,7 +26,7 @@ class IssueBar extends Component {
       <Link to={`/helpcentre/issue/${id}`}>
         <Segment
           color={isClosed === true ? 'green' : 'red'}
-          styleName='inline.margin-half'
+          styleName='inline.margin-half inline.margin-top-2em'
         >
           <List>
             <List.Item>
@@ -105,6 +105,9 @@ class IssueList extends Component {
           <Grid.Row centered>
             <Grid.Column>
               <Segment.Group>
+                <Segment secondary textAlign='center'>
+                  <Header as={'h3'}>Issues</Header>
+                </Segment>
                 <TabStatus />
                 {this.createList()}
                 <Segment secondary textAlign={'right'}>

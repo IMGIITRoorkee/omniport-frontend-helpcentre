@@ -9,9 +9,9 @@ import AppHeader from 'formula_one/src/components/app-header'
 import AppFooter from 'formula_one/src/components/app-footer'
 import { getMaintainers } from '../actions'
 import Issue from './issue'
-import PostIsuue from './post-issue'
 import IssueList from './issue-list'
 
+import main from 'formula_one/src/css/app.css'
 import inline from 'formula_one/src/css/inline.css'
 import blocks from '../css/app.css'
 
@@ -42,21 +42,25 @@ class App extends Component {
     const { match } = this.props
 
     return (
-      <div styleName='inline.flex-column inline.height-full'>
+      <div styleName='main.app'>
         <AppHeader
           appName='Helpcentre'
-          appLogo={
-            'http://www.iconhot.com/icon/png/rrze/720/user-helpdesk-faq.png'
-          }
           appLink={`http://${window.location.host}${match.path}`}
           userDropdown
         />
-        <Container textAlign='justified' styleName='blocks.content-div'>
-          <Switch>
-            <Route exact path={`${match.path}`} component={IssueList} />
-            <Route path={`${match.path}issue/:id`} component={Issue} />
-          </Switch>
-        </Container>
+
+        <div styleName='main.app-main'>
+          <Sidebar />
+          <Scrollbars autoHide>
+
+            <Container styleName='blocks.content-div'>
+              <Switch>
+                <Route exact path={`${match.path}`} component={IssueList} />
+                <Route path={`${match.path}issue/:id`} component={Issue} />
+              </Switch>
+            </Container>
+          </Scrollbars>
+        </div>
         <AppFooter creators={creators} />
       </div>
     )

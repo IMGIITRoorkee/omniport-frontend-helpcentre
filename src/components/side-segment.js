@@ -36,37 +36,6 @@ class SideSegment extends Component {
     return c
   }
 
-  // assignees () {
-  //   const { activeIssue } = this.props
-  //   return activeIssue.assignee
-  //     ? typeof activeIssue.assignee[0] === 'object'
-  //         ? activeIssue.assignee.map(assignee => {
-  //           return (
-  //             <Label key={assignee['id']} color='blue' image>
-  //               {assignee['person']
-  //                   ? assignee['person']['displayPicture']
-  //                       ? <img src={assignee['person']['displayPicture']} />
-  //                       : <Icon name='user' />
-  //                   : void 0}
-  //               {assignee['person'] ? assignee['person']['shortName'] : null}
-  //             </Label>
-  //           )
-  //         })
-  //         : this.getAssigneesFromIndex(activeIssue.assignee).map(assignee => {
-  //           return (
-  //             <Label key={assignee['id']} color='blue' image>
-  //               {assignee['person']
-  //                   ? assignee['person']['displayPicture']
-  //                       ? <img src={assignee['person']['displayPicture']} />
-  //                       : <Icon name='user' />
-  //                   : void 0}
-  //               {assignee['person'] ? assignee['person']['shortName'] : null}
-  //             </Label>
-  //           )
-  //         })
-  //     : void 0
-  // }
-
   handleChange = (e, { value }) => {
     this.props.ChangeAssignee(this.props.id, value)
   }
@@ -79,7 +48,7 @@ class SideSegment extends Component {
         <List divided relaxed>
           <List.Item>
             <List.Content>
-              <List.Header>Issue Opened On</List.Header>
+              <List.Header>Issue opened on</List.Header>
               {moment(activeIssue['datetimeCreated']).format(
                 'dddd, MMMM Do YYYY'
               )}
@@ -87,13 +56,13 @@ class SideSegment extends Component {
           </List.Item>
           <List.Item>
             <List.Content>
-              <List.Header>Issue Opened At</List.Header>
+              <List.Header>Issue opened at</List.Header>
               {moment(activeIssue['datetimeCreated']).format('h:mm a')}
             </List.Content>
           </List.Item>
           <List.Item>
             <List.Content>
-              <List.Header>Issue Opened By</List.Header>
+              <List.Header>Issue opened by</List.Header>
               <Label
                 styleName='inline.margin-top-half inline.margin-bottom-half'
                 image
