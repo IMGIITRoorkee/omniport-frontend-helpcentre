@@ -136,7 +136,7 @@ class AddQuery extends Component {
                 />
               </Form.Field>
               <Form.Field>
-                <label>Add Query</label>
+                <label>Add query</label>
                 <TextArea
                   value={text}
                   onChange={this.handleChange}
@@ -148,9 +148,15 @@ class AddQuery extends Component {
                 />
               </Form.Field>
               <label htmlFor='uploadPhoto'>
-                <Button as='a' icon labelPosition='left' primary>
-                  Upload
+                <Button
+                  as='span'
+                  icon
+                  labelPosition='left'
+                  primary
+                  styleName='inline.margin-bottom-1em'
+                >
                   <Icon name='upload' />
+                  Upload
                 </Button>
               </label>
               <input
@@ -160,7 +166,6 @@ class AddQuery extends Component {
                 id='uploadPhoto'
                 styleName='inline.display-none'
               />
-              <br />
               {fileSrc
                 ? uploadedFile['type'].includes('image')
                     ? <Card>
@@ -189,14 +194,17 @@ class AddQuery extends Component {
                       </Label>
                     </div>
                 : false}
-              <Divider />
+              <br />
               <Button
                 type='submit'
                 onClick={this.handleSubmit}
                 position='right'
                 positive
+                icon
+                labelPosition='left'
                 disabled={!text || !app || !subject}
               >
+                <Icon name='send' />
                 Submit
               </Button>
             </Form>
