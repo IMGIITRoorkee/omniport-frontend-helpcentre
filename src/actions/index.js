@@ -64,6 +64,7 @@ export const addIssue = (data, index, status) => {
   return dispatch => {
     axios.post(urlQueries(), data, { headers: headers }).then(res => {
       dispatch(setIssueList(index, status))
+      dispatch(setStatusNumbers())
     })
   }
 }
