@@ -26,7 +26,7 @@ class IssueBar extends Component {
       <Link to={`/helpcentre/issue/${id}`}>
         <Segment
           color={isClosed === true ? 'green' : 'red'}
-          styleName='inline.margin-half inline.margin-top-2em'
+          styleName='inline.margin-half inline.margin-top-1em'
         >
           <List>
             <List.Item>
