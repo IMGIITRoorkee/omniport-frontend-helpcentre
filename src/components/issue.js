@@ -177,15 +177,16 @@ class Issue extends Component {
                     <Comment.Text styleName='inline.white-space-pre-wrap'>
                       {activeIssue['query']}
                       {activeIssue['uploadedFile']
-                          ? RegExp('^\.jpg$|\.gif$|.png$|\.jpeg$').test(
+                          ? RegExp('^\.jpg$|\.gif$|.png$|\.jpeg$|\.jpg$').test(
                               activeIssue['uploadedFile']
                             )
                               ? <Modal
                                 dimmer='blurring'
                                 trigger={
-                                  <Card
-                                    image={activeIssue['uploadedFile']}
+                                  <Image 
+                                    src={activeIssue['uploadedFile']}
                                     alt={activeIssue['id']}
+                                    styleName='block.uploaded-image'
                                     />
                                   }
                                 basic
