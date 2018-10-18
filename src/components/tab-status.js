@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Icon, Tab, Menu, Label } from 'semantic-ui-react'
+import { Dropdown, Icon, Tab, Menu, Label, Segment } from 'semantic-ui-react'
+import { MobileView, BrowserView } from 'react-device-detect'
 
 import { ifRole } from 'formula_one/src/utils'
 import { setIssueList, changePage, setUser, setStatusNumbers } from '../actions'
@@ -16,6 +17,10 @@ class TabStatus extends Component {
     this.props.SetIssueList(1, 'opened')
   }
 
+  handleDropdownChange = (event, { value }) => {
+    this.props.ChangePage(1, value)
+    this.props.SetIssueList(1, value)
+  }
   handleTabChange = (event, data) => {
     let status = 'opened'
     switch (data['activeIndex']) {
@@ -37,6 +42,65 @@ class TabStatus extends Component {
 
   render () {
     const { statusNumbers } = this.props
+    const optionsMaintainer = [
+      {
+        key: 1,
+        content: (
+          <span>
+            <Icon name='exclamation circle' color='red' />
+            {`Opened (${statusNumbers['open']})`}
+          </span>
+        ),
+        value: 'opened',
+        text: `Opened (${statusNumbers['open']})`
+      },
+      {
+        key: 2,
+        content: (
+          <span>
+            <Icon name='check' color='green' />
+            {`Closed (${statusNumbers['close']})`}
+          </span>
+        ),
+        value: 'closed',
+        text: `Closed (${statusNumbers['close']})`
+      },
+      {
+        key: 3,
+        content: (
+          <span>
+            <Icon name='eye' color='blue' />
+            {`Assigned (${statusNumbers['assign']})`}
+          </span>
+        ),
+        value: 'assigned',
+        text: `Assigned (${statusNumbers['assign']})`
+      }
+    ]
+    const options = [
+      {
+        key: 1,
+        content: (
+          <span>
+            <Icon name='exclamation circle' color='red' />
+            {`Opened (${statusNumbers['open']})`}
+          </span>
+        ),
+        value: 'opened',
+        text: `Opened (${statusNumbers['open']})`
+      },
+      {
+        key: 2,
+        content: (
+          <span>
+            <Icon name='check' color='green' />
+            {`Closed (${statusNumbers['close']})`}
+          </span>
+        ),
+        value: 'closed',
+        text: `Closed (${statusNumbers['close']})`
+      }
+    ]
     const panesMaintainer = [
       {
         menuItem: (
@@ -84,18 +148,39 @@ class TabStatus extends Component {
     ]
 
     return (
-      <Tab
-        menu={{ secondary: true, pointing: true }}
-        panes={
-          ifRole(
-            this.props.whoAmI ? this.props.whoAmI['roles'] : [],
-            'Maintainer'
-          ) === 'NOT_ROLE'
-            ? panesUser
-            : panesMaintainer
-        }
-        onTabChange={this.handleTabChange}
-      />
+      <React.Fragment>
+        <BrowserView>
+          <Tab
+            menu={{ secondary: true, pointing: true }}
+            panes={
+              ifRole(
+                this.props.whoAmI ? this.props.whoAmI['roles'] : [],
+                'Maintainer'
+              ) === 'NOT_ROLE'
+                ? panesUser
+                : panesMaintainer
+            }
+            onTabChange={this.handleTabChange}
+          />
+        </BrowserView>
+        <MobileView>
+          <Segment secondary attached textAlign='center'>
+            <Dropdown
+              options={
+                ifRole(
+                  this.props.whoAmI ? this.props.whoAmI['roles'] : [],
+                  'Maintainer'
+                ) === 'NOT_ROLE'
+                  ? options
+                  : optionsMaintainer
+              }
+              onChange={this.handleDropdownChange}
+              selection
+              defaultValue='opened'
+            />
+          </Segment>
+        </MobileView>
+      </React.Fragment>
     )
   }
 }
