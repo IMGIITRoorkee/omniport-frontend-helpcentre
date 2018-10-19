@@ -149,6 +149,20 @@ class SideSegment extends Component {
                                 multiple
                                 search
                                 onChange={this.handleChange}
+                                value={
+                                  activeIssue.assignee
+                                    ? typeof activeIssue.assignee[0] ===
+                                        'object'
+                                        ? activeIssue.assignee.map(assignee => {
+                                          return assignee.id
+                                        })
+                                        : this.getAssigneesFromIndex(
+                                            activeIssue.assignee
+                                          ).map(assignee => {
+                                            return assignee['id']
+                                          })
+                                    : false
+                                }
                                 options={
                                   maintainers
                                     ? maintainers.map(maintainer => {
