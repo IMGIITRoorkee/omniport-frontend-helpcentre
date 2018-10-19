@@ -14,6 +14,7 @@ import IssueList from './issue-list'
 import main from 'formula_one/src/css/app.css'
 import inline from 'formula_one/src/css/inline.css'
 import blocks from '../css/app.css'
+import { isMobile, isBrowser } from 'react-device-detect'
 
 class App extends Component {
   constructor (props) {
@@ -48,9 +49,9 @@ class App extends Component {
           appLink={`http://${window.location.host}${match.path}`}
           userDropdown
         />
-
+        {isMobile && <Sidebar />}
         <div styleName='main.app-main'>
-          <Sidebar />
+          {isBrowser && <Sidebar />}
           <Scrollbars autoHide>
 
             <Container styleName='blocks.content-div'>
