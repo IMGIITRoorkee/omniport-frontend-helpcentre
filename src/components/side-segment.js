@@ -16,9 +16,8 @@ import inline from 'formula_one/src/css/inline.css'
 class SideSegment extends Component {
   constructor (props) {
     super(props)
+    this.state = {}
   }
-
-  state = {}
 
   componentDidMount () {
     this.props.SetUser()

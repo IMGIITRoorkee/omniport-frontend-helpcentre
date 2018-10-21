@@ -7,10 +7,6 @@ import { ifRole } from 'formula_one/src/utils'
 import { setIssueList, changePage, setUser, setStatusNumbers } from '../actions'
 
 class TabStatus extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   componentDidMount () {
     this.props.SetUser()
     this.props.SetStatusNumbers()

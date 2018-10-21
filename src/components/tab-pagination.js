@@ -6,10 +6,6 @@ import { MobileView, BrowserView } from 'react-device-detect'
 import { setIssueList, changePage, setUser, setStatusNumbers } from '../actions'
 
 class TabPagination extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   componentDidMount () {
     this.props.SetUser()
     this.props.SetStatusNumbers()

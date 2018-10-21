@@ -60,10 +60,6 @@ class IssueBar extends Component {
 }
 
 class IssueList extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   componentDidMount () {
     this.props.SetStatusNumbers()
     this.props.SetIssueList(1, 'opened')

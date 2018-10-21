@@ -1,11 +1,14 @@
+export function urlMainApp () {
+  return '/api/helpcentre/'
+}
 export function urlQueries () {
-  return '/api/helpcentre/query/'
+  return `${urlMainApp()}query/`
 }
 
 export function urlQueryDetails (id) {
-  return `/api/helpcentre/query/${id}/`
+  return `${urlQueries()}${id}/`
 }
 
 export function urlComments () {
-  return '/api/helpcentre/comments/'
+  return `${urlMainApp()}comments/`
 }

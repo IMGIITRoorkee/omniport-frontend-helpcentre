@@ -13,9 +13,6 @@ class PostComment extends Component {
       closed: this.props.isClosed
     }
   }
-
-  componentDidMount () {}
-
   handleChange = e => {
     const name = e.target.name
     this.setState({

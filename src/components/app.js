@@ -17,10 +17,6 @@ import blocks from '../css/app.css'
 import { isMobile, isBrowser } from 'react-device-detect'
 
 class App extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   componentDidMount () {
     this.props.GetMaintainers()
   }
