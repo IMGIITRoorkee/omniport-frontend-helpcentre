@@ -4,7 +4,6 @@ import {
   Form,
   TextArea,
   Dropdown,
-  Divider,
   Segment,
   Image,
   Dimmer,
@@ -217,7 +216,6 @@ class AddQuery extends Component {
 
 function mapStateToProps (state) {
   return {
-    user: state.user,
     paginationIndex: state.paginationIndex,
     whoAmI: state.whoAmI
   }

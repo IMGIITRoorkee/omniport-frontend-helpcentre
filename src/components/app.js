@@ -68,12 +68,6 @@ class App extends Component {
   }
 }
 
-function mapStateToProps (state) {
-  return {
-    user: state.user
-  }
-}
-
 const mapDispatchToProps = dispatch => {
   return {
     GetMaintainers: () => {
@@ -82,4 +76,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(null, mapDispatchToProps)(App)

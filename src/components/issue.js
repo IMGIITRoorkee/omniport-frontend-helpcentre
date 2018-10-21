@@ -11,7 +11,6 @@ import {
   Popup,
   Loader,
   Image,
-  Card,
   Modal
 } from 'semantic-ui-react'
 import moment from 'moment'
@@ -254,9 +253,6 @@ class Issue extends Component {
 
 function mapStateToProps (state) {
   return {
-    queries: state.queries,
-    user: state.user,
-    comments: state.comments,
     maintainers: state.maintainers,
     whoAmI: state.whoAmI,
     activeIssue: state.activeIssue

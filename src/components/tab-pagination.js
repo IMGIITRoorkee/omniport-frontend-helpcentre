@@ -90,7 +90,6 @@ class TabPagination extends Component {
 
 function mapStateToProps (state) {
   return {
-    queries: state.queries,
     whoAmI: state.whoAmI,
     issueList: state.issueList,
     page: state.paginationIndex,
