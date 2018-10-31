@@ -1,9 +1,8 @@
 import axios from 'axios'
 
 // import urls
-import { urlWhoAmI, urlGetMaintainers } from 'formula_one/src/urls'
+import { urlWhoAmI, urlGetMaintainers, getCookie } from 'formula_one'
 import { urlQueries, urlQueryDetails, urlComments } from '../urls'
-import { getCookie } from 'formula_one/src/utils'
 
 export const setUser = () => {
   return dispatch => {

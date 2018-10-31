@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Grid, Header, List, Segment } from 'semantic-ui-react'
 import moment from 'moment'
 
-import { ifRole } from 'formula_one/src/utils'
+import { NonMaintainerView } from 'formula_one'
 import TabStatus from './tab-status'
 import TabPagination from './tab-pagination'
 import PostIssue from './post-issue'
@@ -94,8 +94,9 @@ class IssueList extends Component {
         <Grid textAlign='justified'>
           <Grid.Row centered>
             <Grid.Column>
-              {ifRole(whoAmI['roles'], 'Maintainer') === 'NOT_ROLE' &&
-                <PostIssue />}
+              <NonMaintainerView which='helpcentre'>
+                <PostIssue />
+              </NonMaintainerView>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row centered>

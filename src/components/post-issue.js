@@ -130,7 +130,6 @@ class AddQuery extends Component {
                   value={subject}
                   onChange={this.handleChange}
                   name='subject'
-                  required
                   placeholder='Subject'
                 />
               </Form.Field>
@@ -142,10 +141,10 @@ class AddQuery extends Component {
                   name='text'
                   rows='3'
                   autoHeight
-                  required
                   placeholder='Add Query'
                 />
               </Form.Field>
+              <p>To attach more than one file, upload a <i>.zip</i> archive.</p>
               <label htmlFor='uploadPhoto'>
                 <Button
                   as='span'

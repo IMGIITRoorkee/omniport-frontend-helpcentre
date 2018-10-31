@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Dropdown, Icon, Tab, Menu, Label, Segment } from 'semantic-ui-react'
 import { MobileView, BrowserView } from 'react-device-detect'
 
-import { ifRole } from 'formula_one/src/utils'
+import { ifRole } from 'formula_one'
 import { setIssueList, changePage, setUser, setStatusNumbers } from '../actions'
 
 class TabStatus extends Component {

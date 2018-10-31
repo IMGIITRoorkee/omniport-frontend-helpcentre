@@ -55,7 +55,7 @@ class PostComment extends Component {
             onClick={this.commentChangeStatus}
             disabled={this.props.activeIssue['isClosed'] || !text}
           >
-            Close issue
+            Comment and close
           </Button>
           <Button primary onClick={this.comment} disabled={!text}>
             Comment

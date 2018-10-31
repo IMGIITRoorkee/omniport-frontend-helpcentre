@@ -3,7 +3,7 @@ import { Icon, Dropdown, List, Segment, Label } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import moment from 'moment'
 
-import { ifRole } from 'formula_one/src/utils'
+import { ifRole, MaintainerView } from 'formula_one'
 import {
   setActiveIssue,
   changeStatusActiveIssue,
@@ -133,66 +133,63 @@ class SideSegment extends Component {
                                 )
                               })
                         : false}
-                    {whoAmI['roles']
-                        ? ifRole(whoAmI['roles'], 'Maintainer') ===
-                            'IS_ACTIVE' &&
-                            <Fragment>
-                              <List.Header styleName='inline.margin-top-half'>
-                                Change
-                              </List.Header>
-                              <Dropdown
-                                styleName='inline.margin-top-half'
-                                fluid
-                                placeholder='Change Assignees'
-                                selection
-                                multiple
-                                search
-                                onChange={this.handleChange}
-                                value={
-                                  activeIssue.assignee
-                                    ? typeof activeIssue.assignee[0] ===
-                                        'object'
-                                        ? activeIssue.assignee.map(assignee => {
-                                          return assignee.id
-                                        })
-                                        : this.getAssigneesFromIndex(
-                                            activeIssue.assignee
-                                          ).map(assignee => {
-                                            return assignee['id']
-                                          })
-                                    : false
-                                }
-                                options={
-                                  maintainers
-                                    ? maintainers.map(maintainer => {
-                                      return maintainer['person'][
-                                          'displayPicture'
-                                        ]
-                                          ? {
-                                            text: maintainer['person'][
-                                                'shortName'
-                                              ],
-                                            value: maintainer['id'],
-                                            image: {
-                                              avatar: true,
-                                              src: maintainer['person'][
-                                                  'displayPicture'
-                                                ]
-                                            }
-                                          }
-                                          : {
-                                            text: maintainer['person'][
-                                                'shortName'
-                                              ],
-                                            value: maintainer['id'],
-                                            icon: 'user'
-                                          }
+                    <MaintainerView which='helpcentre'>
+                      <Fragment>
+                        <List.Header styleName='inline.margin-top-half'>
+                            Change
+                          </List.Header>
+                        <Dropdown
+                          styleName='inline.margin-top-half'
+                          fluid
+                          placeholder='Change Assignees'
+                          selection
+                          multiple
+                          search
+                          onChange={this.handleChange}
+                          value={
+                              activeIssue.assignee
+                                ? typeof activeIssue.assignee[0] === 'object'
+                                    ? activeIssue.assignee.map(assignee => {
+                                      return assignee.id
                                     })
-                                    : []
-                                }
-                              />
-                            </Fragment>
-                        : false}
+                                    : this.getAssigneesFromIndex(
+                                        activeIssue.assignee
+                                      ).map(assignee => {
+                                        return assignee['id']
+                                      })
+                                : false
+                            }
+                          options={
+                              maintainers
+                                ? maintainers.map(maintainer => {
+                                  return maintainer['person'][
+                                      'displayPicture'
+                                    ]
+                                      ? {
+                                        text: maintainer['person'][
+                                            'shortName'
+                                          ],
+                                        value: maintainer['id'],
+                                        image: {
+                                          avatar: true,
+                                          src: maintainer['person'][
+                                              'displayPicture'
+                                            ]
+                                        }
+                                      }
+                                      : {
+                                        text: maintainer['person'][
+                                            'shortName'
+                                          ],
+                                        value: maintainer['id'],
+                                        icon: 'user'
+                                      }
+                                })
+                                : []
+                            }
+                          />
+                      </Fragment>
+                    </MaintainerView>
                   </List.Content>
                 </List.Item>
                 : false

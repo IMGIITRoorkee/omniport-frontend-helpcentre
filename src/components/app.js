@@ -5,14 +5,12 @@ import { connect } from 'react-redux'
 import { Scrollbars } from 'react-custom-scrollbars'
 
 import Sidebar from 'core/common/src/components/primary-sidebar'
-import AppHeader from 'formula_one/src/components/app-header'
-import AppFooter from 'formula_one/src/components/app-footer'
+import { AppHeader, AppFooter, AppMain } from 'formula_one'
 import { getMaintainers } from '../actions'
 import Issue from './issue'
 import IssueList from './issue-list'
 
 import main from 'formula_one/src/css/app.css'
-import inline from 'formula_one/src/css/inline.css'
 import blocks from '../css/app.css'
 import { isMobile, isBrowser } from 'react-device-detect'
 
@@ -45,19 +43,20 @@ class App extends Component {
           appLink={`http://${window.location.host}${match.path}`}
           userDropdown
         />
-        {isMobile && <Sidebar />}
-        <div styleName='main.app-main'>
-          {isBrowser && <Sidebar />}
-          <Scrollbars autoHide>
-
-            <Container styleName='blocks.content-div'>
-              <Switch>
-                <Route exact path={`${match.path}`} component={IssueList} />
-                <Route path={`${match.path}issue/:id`} component={Issue} />
-              </Switch>
-            </Container>
-          </Scrollbars>
-        </div>
+        <AppMain>
+          {isMobile && <Sidebar />}
+          <div styleName='main.app-main'>
+            {isBrowser && <Sidebar />}
+            <Scrollbars autoHide>
+              <Container styleName='blocks.content-div'>
+                <Switch>
+                  <Route exact path={`${match.path}`} component={IssueList} />
+                  <Route path={`${match.path}issue/:id`} component={Issue} />
+                </Switch>
+              </Container>
+            </Scrollbars>
+          </div>
+        </AppMain>
         <AppFooter creators={creators} />
       </div>
     )

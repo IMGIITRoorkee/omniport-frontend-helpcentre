@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ifRole } from 'formula_one/src/utils'
+import { ifRole } from 'formula_one'
 import { connect } from 'react-redux'
 import {
   Icon,
@@ -61,11 +61,6 @@ class IssueComment extends Component {
 }
 
 class Issue extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {}
-  }
-
   componentDidMount () {
     const id = this.props.match.params.id
     this.props.SetUser()
@@ -115,6 +110,7 @@ class Issue extends Component {
                       }
                     on='click'
                     position='left center'
+                    hideOnScroll
                     />
                   : <Popup
                     trigger={
@@ -133,6 +129,7 @@ class Issue extends Component {
                       }
                     on='click'
                     position='left center'
+                    hideOnScroll
                     />}
               <span styleName='block.issue-opener'>
                 {isBrowser &&
@@ -182,7 +179,7 @@ class Issue extends Component {
                               ? <Modal
                                 dimmer='blurring'
                                 trigger={
-                                  <Image 
+                                  <Image
                                     src={activeIssue['uploadedFile']}
                                     alt={activeIssue['id']}
                                     styleName='block.uploaded-image'
