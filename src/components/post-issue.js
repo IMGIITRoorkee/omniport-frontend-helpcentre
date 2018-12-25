@@ -14,8 +14,11 @@ import {
 } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
+import { getTheme } from 'formula_one'
 import { addIssue } from '../actions'
+
 import inline from 'formula_one/src/css/inline.css'
+import main from '../css/issue-list.css'
 
 const AppOptions = [
   { key: '1', value: 'App1', text: 'App 1' },
@@ -144,13 +147,15 @@ class AddQuery extends Component {
                   placeholder='Add Query'
                 />
               </Form.Field>
-              <p>To attach more than one file, upload a <i>.zip</i> archive.</p>
+              <p>
+                To attach more than one file, upload a <i>.zip</i> archive.
+              </p>
               <label htmlFor='uploadPhoto'>
                 <Button
                   as='span'
                   icon
                   labelPosition='left'
-                  primary
+                  color={getTheme()}
                   styleName='inline.margin-bottom-1em'
                 >
                   <Icon name='upload' />
@@ -164,47 +169,52 @@ class AddQuery extends Component {
                 id='uploadPhoto'
                 styleName='inline.display-none'
               />
-              {fileSrc
-                ? uploadedFile['type'].includes('image')
-                    ? <Card>
-                      <Dimmer.Dimmable
-                        blurring
-                        as={Image}
-                        src={fileSrc}
-                        size='medium'
-                        dimmer={{ active, content }}
-                        onMouseEnter={this.handleShow}
-                        onMouseLeave={this.handleHide}
-                        />
-                    </Card>
-                    : <div>
-                      <Label>
-                        <a href={fileSrc} target='blank'>
-                          {uploadedFile['name']}
-                        </a>
-                        {' '}
-                        <span
-                          onClick={this.removeImage}
-                          styleName='inline.cursor-pointer'
-                          >
-                          <Icon name='close' />
-                        </span>
-                      </Label>
-                    </div>
-                : false}
+              {fileSrc ? (
+                uploadedFile['type'].includes('image') ? (
+                  <Card>
+                    <Dimmer.Dimmable
+                      blurring
+                      as={Image}
+                      src={fileSrc}
+                      size='medium'
+                      dimmer={{ active, content }}
+                      onMouseEnter={this.handleShow}
+                      onMouseLeave={this.handleHide}
+                    />
+                  </Card>
+                ) : (
+                  <div>
+                    <Label>
+                      <a href={fileSrc} target='blank'>
+                        {uploadedFile['name']}
+                      </a>{' '}
+                      <span
+                        onClick={this.removeImage}
+                        styleName='inline.cursor-pointer'
+                      >
+                        <Icon name='close' />
+                      </span>
+                    </Label>
+                  </div>
+                )
+              ) : (
+                false
+              )}
               <br />
-              <Button
-                type='submit'
-                onClick={this.handleSubmit}
-                position='right'
-                positive
-                icon
-                labelPosition='left'
-                disabled={!text || !app || !subject}
-              >
-                <Icon name='send' />
-                Submit
-              </Button>
+              <div styleName='main.button-container'>
+                <Button
+                  type='submit'
+                  onClick={this.handleSubmit}
+                  position='right'
+                  positive
+                  icon
+                  labelPosition='left'
+                  disabled={!text || !app || !subject}
+                >
+                  <Icon name='send' />
+                  Submit
+                </Button>
+              </div>
             </Form>
           </Segment>
         </Segment.Group>
@@ -228,4 +238,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddQuery)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddQuery)

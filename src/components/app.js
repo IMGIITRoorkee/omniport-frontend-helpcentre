@@ -3,6 +3,7 @@ import { Container } from 'semantic-ui-react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Scrollbars } from 'react-custom-scrollbars'
+import { isMobile, isBrowser } from 'react-device-detect'
 
 import Sidebar from 'core/common/src/components/primary-sidebar'
 import { AppHeader, AppFooter, AppMain } from 'formula_one'
@@ -12,7 +13,6 @@ import IssueList from './issue-list'
 
 import main from 'formula_one/src/css/app.css'
 import blocks from '../css/app.css'
-import { isMobile, isBrowser } from 'react-device-detect'
 
 class App extends Component {
   componentDidMount () {
