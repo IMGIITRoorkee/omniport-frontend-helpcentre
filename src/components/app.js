@@ -23,15 +23,18 @@ class App extends Component {
     const creators = [
       {
         name: 'Dhruv Bhanushali',
-        role: 'Mentor'
+        role: 'Backend Developer',
+        link: 'https://dhruvkb.github.io/'
       },
       {
         name: 'Shaddy Garg',
-        role: 'Backend Developer'
+        role: 'Backend Developer',
+        link: 'https://shaddygarg.github.io/'
       },
       {
         name: 'Praduman Goyal',
-        role: 'Frontend Developer'
+        role: 'Frontend Developer',
+        link: 'https://pradumangoyal.github.io'
       }
     ]
     const { match } = this.props
