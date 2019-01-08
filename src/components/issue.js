@@ -18,6 +18,7 @@ import { isBrowser, isMobile } from 'react-device-detect'
 import Emojis from 'react-emoji-component'
 import { emojify } from 'react-emojione'
 
+import { DefaultDP, getTheme } from 'formula_one'
 import SideSegment from './side-segment'
 import PostComment from './post-comment'
 import {
@@ -35,13 +36,13 @@ class IssueComment extends Component {
     const { commenter, datetimeCreated, text } = this.props
     return (
       <Comment styleName='inline.margin-bottom-2em'>
-        <Comment.Avatar src={commenter['displayPicture']} />
+        <Comment.Avatar src={commenter.displayPicture || '/static/helpcentre/manster.svg'} />
         <Comment.Content>
           <Comment.Author>
             {commenter['fullName']}
             {' '}
             {ifRole(commenter['roles'], 'Maintainer') === 'IS_ACTIVE'
-              ? <Icon color='blue' fitted name='shield' />
+              ? <Icon color={getTheme()} fitted name='shield' />
               : false}
           </Comment.Author>
           <Comment.Metadata>
@@ -155,11 +156,8 @@ class Issue extends Component {
               <Comment.Group>
                 <Comment styleName='inline.margin-bottom-1_5em'>
                   <Comment.Avatar
-                    src={
-                        activeIssue['uploader'] &&
-                          activeIssue['uploader']['displayPicture']
-                      }
-                    />
+                  src={activeIssue['uploader'] && activeIssue['uploader']['displayPicture'] || '/static/helpcentre/manster.svg'}
+                  />
                   <Comment.Content>
                     <Comment.Author>
                       {activeIssue['uploader'] &&
@@ -221,7 +219,8 @@ class Issue extends Component {
                     })}
                 <Comment>
                   <Comment.Avatar
-                    src={whoAmI ? whoAmI['displayPicture'] : ''}
+                    src=
+                      {whoAmI['displayPicture'] || '/static/helpcentre/manster.svg'}
                     />
                   <Comment.Content>
                     <Comment.Author>
