@@ -6,7 +6,7 @@
 	"baseUrl": "/helpcentre",
 	"source": "helpcentre/src/index",
 	"primarySidebar": {
-		"icon": "question",
+		"icon": "help",
 		"priority": 8
 	}
 }
