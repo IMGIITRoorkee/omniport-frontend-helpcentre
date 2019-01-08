@@ -3,13 +3,13 @@ import { connect } from 'react-redux'
 import axios from 'axios'
 import { Form, Search, Icon } from 'semantic-ui-react'
 
-import { changeAssignee } from '../actions'
+import { changeAssignees } from '../actions'
 import { getTheme, UserCard } from 'formula_one'
 import { urlSearchMaintainer } from '../urls'
 
 import inline from 'formula_one/src/css/inline.css'
 
-class AddAssignee extends React.Component {
+class AddAssignees extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -36,8 +36,8 @@ class AddAssignee extends React.Component {
   }
   handleResultSelect = (e, { result }) => {
     const { activeIssue } = this.props
-    const data = [...activeIssue.assignee.map(x => x.id), result.person.id]
-    this.props.ChangeAssignee(activeIssue.id, data)
+    const data = [...activeIssue.assignees.map(x => x.id), result.person.id]
+    this.props.ChangeAssignees(activeIssue.id, data)
   }
   render () {
     const { isLoading, value, results } = this.state
@@ -48,7 +48,7 @@ class AddAssignee extends React.Component {
         name={person.person.fullName}
         image={person.person.displayPicture}
         right={
-          activeIssue.assignee.find(x => {
+          activeIssue.assignees.find(x => {
             return x.id === person.id
           }) && <Icon name='check' color='green' />
         }
@@ -59,7 +59,7 @@ class AddAssignee extends React.Component {
         <Form styleName='inline.margin-top-half'>
           <Form.Field>
             <Search
-              loading={isLoading || !activeIssue.assignee}
+              loading={isLoading || !activeIssue.assignees}
               onSearchChange={this.handleSearchChange}
               onResultSelect={this.handleResultSelect}
               results={results}
@@ -84,8 +84,8 @@ function mapStateToProps (state) {
 }
 const mapDispatchToProps = dispatch => {
   return {
-    ChangeAssignee: (id, assignees) => {
-      dispatch(changeAssignee(id, assignees))
+    ChangeAssignees: (id, assignees) => {
+      dispatch(changeAssignees(id, assignees))
     }
   }
 }
@@ -93,4 +93,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AddAssignee)
+)(AddAssignees)

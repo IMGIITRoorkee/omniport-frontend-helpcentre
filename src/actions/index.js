@@ -117,20 +117,20 @@ export const changeStatusActiveIssue = (id, newstatus) => {
   }
 }
 
-export const changeAssignee = (id, newAssignees) => {
+export const changeAssignees = (id, newAssignees) => {
   let headers = {
     'X-CSRFToken': getCookie('csrftoken')
   }
   let data = {
     id: id,
-    assignee: newAssignees
+    assignees: newAssignees
   }
   return dispatch => {
     axios.patch(urlQueryDetails(id), data, { headers: headers }).then(res => {
       res.status == 200
         ? dispatch({
-          type: 'CHANGE_ASSIGNEE_ACTIVEISSUE',
-          payload: res.data['assignee']
+          type: 'CHANGE_ASSIGNEES_ACTIVEISSUE',
+          payload: res.data['assignees']
         })
         : void 0
     })

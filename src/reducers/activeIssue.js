@@ -4,8 +4,8 @@ const activeIssue = (state = {}, action) => {
       return action.payload
     case 'CHANGE_STATUS_ACTIVEISSUE':
       return { ...state, isClosed: action.payload }
-    case 'CHANGE_ASSIGNEE_ACTIVEISSUE':
-      return { ...state, assignee: action.payload }
+    case 'CHANGE_ASSIGNEES_ACTIVEISSUE':
+      return { ...state, assignees: action.payload }
     case 'ADD_COMMENT':
       return { ...state, comments: [...state['comments'], action.payload] }
     case 'ADD_COMMENT_CHANGE_STATUS':

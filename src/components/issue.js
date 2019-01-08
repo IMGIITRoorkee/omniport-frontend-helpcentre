@@ -18,13 +18,13 @@ import { isBrowser, isMobile } from 'react-device-detect'
 import Emojis from 'react-emoji-component'
 import { emojify } from 'react-emojione'
 
-import { DefaultDP, getTheme } from 'formula_one'
+import { getTheme } from 'formula_one'
 import SideSegment from './side-segment'
 import PostComment from './post-comment'
 import {
   setActiveIssue,
   changeStatusActiveIssue,
-  changeAssignee,
+  changeAssignees,
   getMaintainers,
   setUser
 } from '../actions'
@@ -266,8 +266,8 @@ const mapDispatchToProps = dispatch => {
     ChangeStatusActiveIssue: (id, newStatus) => {
       dispatch(changeStatusActiveIssue(id, newStatus))
     },
-    ChangeAssignee: (id, assignees) => {
-      dispatch(changeAssignee(id, assignees))
+    ChangeAssignees: (id, assignees) => {
+      dispatch(changeAssignees(id, assignees))
     },
     GetMaintainers: () => {
       dispatch(getMaintainers())

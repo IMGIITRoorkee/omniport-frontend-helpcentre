@@ -152,9 +152,9 @@ class TabStatus extends Component {
               ifRole(
                 this.props.whoAmI ? this.props.whoAmI['roles'] : [],
                 'Maintainer'
-              ) === 'NOT_ROLE'
-                ? panesUser
-                : panesMaintainer
+              ) === 'IS_ACTIVE'
+                ? panesMaintainer
+                : panesUser
             }
             onTabChange={this.handleTabChange}
           />
@@ -207,4 +207,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TabStatus)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TabStatus)

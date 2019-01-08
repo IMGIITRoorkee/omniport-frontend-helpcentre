@@ -7,11 +7,11 @@ import { ifRole, MaintainerView, getTheme } from 'formula_one'
 import {
   setActiveIssue,
   changeStatusActiveIssue,
-  changeAssignee,
+  changeAssignees,
   getMaintainers,
   setUser
 } from '../actions'
-import AddAssignee from './add-assignee'
+import AddAssignees from './add-assignees'
 
 import inline from 'formula_one/src/css/inline.css'
 
@@ -40,18 +40,18 @@ class SideSegment extends Component {
   handleDelete = id => {
     const { activeIssue } = this.props
     let data = []
-    if (typeof activeIssue.assignee[0] === 'object') {
-      data = activeIssue.assignee
+    if (typeof activeIssue.assignees[0] === 'object') {
+      data = activeIssue.assignees
         .map(x => x.id)
         .filter(x => {
           return x !== id
         })
     } else {
-      data = activeIssue.assignee.filter(x => {
+      data = activeIssue.assignees.filter(x => {
         return x !== id
       })
     }
-    this.props.ChangeAssignee(this.props.id, data)
+    this.props.ChangeAssignees(this.props.id, data)
   }
   handleContextRef = contextRef => this.setState({ contextRef })
 
@@ -96,17 +96,17 @@ class SideSegment extends Component {
               {activeIssue.appName}
             </List.Content>
           </List.Item>
-          {activeIssue.assignee ? (
+          {activeIssue.assignees ? (
             ifRole(whoAmI.roles, 'Maintainer') === 'IS_ACTIVE' ||
-            activeIssue.assignee.length !== 0 ? (
+            activeIssue.assignees.length !== 0 ? (
               <List.Item>
                   <List.Content>
                   <List.Header styleName='inline.margin-bottom-half'>
                     Assigned To
                     </List.Header>
-                  {activeIssue.assignee
-                      ? typeof activeIssue.assignee[0] === 'object'
-                        ? activeIssue.assignee.map(assignee => {
+                  {activeIssue.assignees
+                      ? typeof activeIssue.assignees[0] === 'object'
+                        ? activeIssue.assignees.map(assignee => {
                           return (
                             <Label key={assignee.id} color={getTheme()} image>
                               {Boolean(assignee.person) &&
@@ -126,7 +126,7 @@ class SideSegment extends Component {
                             </Label>
                           )
                         })
-                        : this.getAssigneesFromIndex(activeIssue.assignee).map(
+                        : this.getAssigneesFromIndex(activeIssue.assignees).map(
                           assignee => {
                             return (
                               <Label key={assignee.id} color={getTheme()} image>
@@ -156,7 +156,7 @@ class SideSegment extends Component {
                       <List.Header styleName='inline.margin-top-half'>
                         Change
                         </List.Header>
-                      <AddAssignee />
+                      <AddAssignees />
                     </Fragment>
                     </MaintainerView>
                 </List.Content>
@@ -192,8 +192,8 @@ const mapDispatchToProps = dispatch => {
     ChangeStatusActiveIssue: (id, newStatus) => {
       dispatch(changeStatusActiveIssue(id, newStatus))
     },
-    ChangeAssignee: (id, assignees) => {
-      dispatch(changeAssignee(id, assignees))
+    ChangeAssignees: (id, assignees) => {
+      dispatch(changeAssignees(id, assignees))
     },
     GetMaintainers: () => {
       dispatch(getMaintainers())
