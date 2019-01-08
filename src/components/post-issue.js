@@ -15,20 +15,10 @@ import {
 import { connect } from 'react-redux'
 
 import { getTheme } from 'formula_one'
-import { addIssue } from '../actions'
+import { addIssue, setAppList } from '../actions'
 
 import inline from 'formula_one/src/css/inline.css'
 import main from '../css/issue-list.css'
-
-const AppOptions = [
-  { key: '1', value: 'App1', text: 'App 1' },
-  {
-    key: '2',
-    value: 'App2',
-    text: 'App2'
-  },
-  { key: '3', value: 'App3', text: 'App 3' }
-]
 
 class AddQuery extends Component {
   constructor (props) {
@@ -41,7 +31,11 @@ class AddQuery extends Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
-
+  componentDidMount () {
+    if (!this.props.appList.isLoaded) {
+      this.props.SetAppList()
+    }
+  }
   handleChange (e) {
     const name = e.target.name
     this.setState({
@@ -94,6 +88,7 @@ class AddQuery extends Component {
 
   render () {
     const { active, text, app, fileSrc, subject, uploadedFile } = this.state
+    const { appList } = this.props
     const content = (
       <div>
         <Button
@@ -121,7 +116,31 @@ class AddQuery extends Component {
                   onChange={this.handleDropdownChange}
                   name='app'
                   placeholder='Select an App'
-                  options={AppOptions}
+                  options={[
+                    ...appList.data.map((app, index) => {
+                      const option = {
+                        key: index,
+                        value: app.nomenclature.verboseName,
+                        text: app.nomenclature.verboseName
+                      }
+                      if (app.assets.favicon) {
+                        option['image'] = {
+                          src: `/static/${app.baseUrls.static}${
+                            app.assets.favicon
+                          }`,
+                          style: {
+                            height: '16px',
+                            width: '16px',
+                            verticalAlign: 'middle'
+                          }
+                        }
+                      } else {
+                        option['icon'] = 'cube'
+                      }
+                      return option
+                    }),
+                    { value: 'Other', text: 'Other', icon: 'cube' }
+                  ]}
                   value={app}
                 />
               </Form.Field>
@@ -226,7 +245,8 @@ class AddQuery extends Component {
 function mapStateToProps (state) {
   return {
     paginationIndex: state.paginationIndex,
-    whoAmI: state.whoAmI
+    whoAmI: state.whoAmI,
+    appList: state.appList
   }
 }
 
@@ -234,6 +254,9 @@ const mapDispatchToProps = dispatch => {
   return {
     AddIssue: (data, index, status) => {
       dispatch(addIssue(data, index, status))
+    },
+    SetAppList: () => {
+      dispatch(setAppList())
     }
   }
 }

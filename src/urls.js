@@ -12,3 +12,7 @@ export function urlQueryDetails (id) {
 export function urlComments () {
   return `${urlMainApp()}comments/`
 }
+
+export function urlSearchMaintainer () {
+  return `/api/yellow_pages/maintainer/`
+}
