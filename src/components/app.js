@@ -41,11 +41,7 @@ class App extends Component {
 
     return (
       <div styleName='main.app'>
-        <AppHeader
-          appName='Helpcentre'
-          appLink={`http://${window.location.host}${match.path}`}
-          userDropdown
-        />
+        <AppHeader appName='helpcentre' mode='site' userDropdown />
         <AppMain>
           {isMobile && <Sidebar />}
           <div styleName='main.app-main'>

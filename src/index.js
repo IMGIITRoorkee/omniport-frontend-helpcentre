@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Route } from 'react-router-dom'
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import { connect } from 'react-redux'
