@@ -49,17 +49,24 @@ class PostComment extends Component {
           onChange={this.handleChange}
           styleName='inline.margin-bottom-half'
         />
-        <Button.Group floated='right'>
+        <Button.Group floated='right' attached={false}>
           <Button
-            styleName='inline.margin-right-half'
             onClick={this.commentChangeStatus}
             disabled={this.props.activeIssue['isClosed'] || !text}
-          >
-            Comment and close
-          </Button>
-          <Button primary onClick={this.comment} disabled={!text}>
-            Comment
-          </Button>
+            content='Comment and close'
+            basic
+            secondary
+            icon='check circle'
+          />
+          <Button.Or />
+          <Button
+            primary
+            onClick={this.comment}
+            disabled={!text}
+            content='Comment'
+            icon='comment outline'
+            basic
+          />
         </Button.Group>
       </Form>
     )
@@ -83,4 +90,7 @@ const mapDispatchToProps = dispatch => {
     }
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(PostComment)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PostComment)

@@ -23,12 +23,12 @@ class App extends Component {
     const creators = [
       {
         name: 'Dhruv Bhanushali',
-        role: 'Backend Developer',
+        role: 'Backend developer',
         link: 'https://dhruvkb.github.io/'
       },
       {
         name: 'Shaddy Garg',
-        role: 'Backend Developer',
+        role: 'Backend developer',
         link: 'https://shaddygarg.github.io/'
       },
       {

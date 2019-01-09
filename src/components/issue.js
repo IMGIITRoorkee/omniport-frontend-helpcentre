@@ -96,18 +96,17 @@ class Issue extends Component {
               {activeIssue.isClosed === true
                   ? <Popup
                     trigger={
-                      <Button positive size='small' basic>
-                        <Icon name='exclamation circle' />Resolved
-                        </Button>
+                      <Button positive size='small' icon='check circle' content='Resolved' />
                       }
                     content={
                       <Button
-                        negative
-                        size='small'
-                        onClick={this.toggleIssue}
-                        >
-                        <Icon name='exclamation circle' />Mark Pending
-                        </Button>
+                          basic
+                          negative
+                          size='small'
+                          icon='exclamation circle'
+                          content='Mark pending'
+                          onClick={this.toggleIssue}
+                        />
                       }
                     on='click'
                     position='left center'
@@ -115,18 +114,17 @@ class Issue extends Component {
                     />
                   : <Popup
                     trigger={
-                      <Button negative size='small' basic>
-                        <Icon name='exclamation circle' />Pending
-                        </Button>
+                      <Button negative size='small' icon='exclamation circle' content='Pending' />
                       }
                     content={
                       <Button
-                        positive
-                        size='small'
-                        onClick={this.toggleIssue}
-                        >
-                        <Icon name='exclamation circle' />Mark Resolved
-                        </Button>
+                          basic
+                          positive
+                          size='small'
+                          icon='check circle'
+                          onClick={this.toggleIssue}
+                          content='Mark resolved'
+                        />
                       }
                     on='click'
                     position='left center'

@@ -172,14 +172,12 @@ class AddQuery extends Component {
               <label htmlFor='uploadPhoto'>
                 <Button
                   as='span'
-                  icon
-                  labelPosition='left'
+                  icon='upload'
+                  content='Upload'
+                  basic
                   color={getTheme()}
                   styleName='inline.margin-bottom-1em'
-                >
-                  <Icon name='upload' />
-                  Upload
-                </Button>
+                />
               </label>
               <input
                 type='file'
@@ -225,14 +223,12 @@ class AddQuery extends Component {
                   type='submit'
                   onClick={this.handleSubmit}
                   position='right'
-                  positive
-                  icon
-                  labelPosition='left'
+                  primary
+                  basic
+                  icon='send'
+                  content='Submit'
                   disabled={!text || !app || !subject}
-                >
-                  <Icon name='send' />
-                  Submit
-                </Button>
+                />
               </div>
             </Form>
           </Segment>
