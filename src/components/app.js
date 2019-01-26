@@ -41,7 +41,7 @@ class App extends Component {
 
     return (
       <div styleName='main.app'>
-        <AppHeader appName='helpcentre' mode='site' userDropdown />
+        <AppHeader userDropdown />
         <AppMain>
           {isMobile && <Sidebar />}
           <div styleName='main.app-main'>
