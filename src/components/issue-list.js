@@ -36,19 +36,14 @@ class IssueBar extends Component {
                 verticalAlign='middle'
               />
               <List.Content>
-                <List.Header>
-                  {title}
-                </List.Header>
+                <List.Header>{title}</List.Header>
                 <List.Description styleName='inline.color-586069'>
                   {'opened '}
                   {moment(datetimeCreated).fromNow()}
                   {' by '}
-                  <span styleName='inline.font-weight-bold'>
-                    {fullName}
-                  </span>
+                  <span styleName='inline.font-weight-bold'>{fullName}</span>
                   {' in '}
-                  <span styleName='inline.font-weight-bold'>{appName}</span>
-                  .
+                  <span styleName='inline.font-weight-bold'>{appName}</span>.
                 </List.Description>
               </List.Content>
             </List.Item>
@@ -68,8 +63,8 @@ class IssueList extends Component {
 
   createList () {
     const { issueList } = this.props
-    return issueList['results']
-      ? issueList['results'].slice(0).map(issue => {
+    return issueList['results'] ? (
+      issueList['results'].slice(0).map(issue => {
         return (
           <IssueBar
             id={issue.id}
@@ -79,12 +74,14 @@ class IssueList extends Component {
             fullName={issue['uploader']['fullName']}
             appName={issue.appName}
             key={issue.id}
-            />
+          />
         )
       })
-      : <Segment styleName='inline.min-height-200px' color='grey'>
+    ) : (
+      <Segment styleName='inline.min-height-200px' color='grey'>
         <i color='grey'>No Issues Fetched</i>
       </Segment>
+    )
   }
 
   render () {
@@ -95,7 +92,7 @@ class IssueList extends Component {
           <Grid.Row centered>
             <Grid.Column>
               <NonMaintainerView which='helpcentre'>
-                <PostIssue />
+                <PostIssue history={this.props.history} />
               </NonMaintainerView>
             </Grid.Column>
           </Grid.Row>
@@ -146,4 +143,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(IssueList)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(IssueList)

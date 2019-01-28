@@ -10,7 +10,8 @@ import {
   Card,
   Icon,
   Header,
-  Label
+  Label,
+  Message
 } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
@@ -23,10 +24,15 @@ import main from '../css/issue-list.css'
 class AddQuery extends Component {
   constructor (props) {
     super(props)
+    const url = new URLSearchParams(props.history.location.search)
+    console.log(url.get('app') || '')
     this.state = {
       subject: '',
       text: '',
-      app: ''
+      app: url.get('app') || null,
+      success: false,
+      error: false,
+      message: ''
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -62,10 +68,10 @@ class AddQuery extends Component {
   handleHide = () => this.setState({ active: false })
   handleDropdownChange = (e, { name, value }) =>
     this.setState({ [name]: value })
-
   handleSubmit () {
     const { subject, text, app, uploadedFile } = this.state
-    if (this.state.text && this.state.app && this.state.subject) {
+    const url = new URLSearchParams(this.props.history.location.search)
+    if (this.state.text && this.state.app) {
       var formData = new FormData()
       formData.append('title', subject)
       formData.append('app_name', app)
@@ -74,18 +80,34 @@ class AddQuery extends Component {
       this.props.AddIssue(
         formData,
         this.props.paginationIndex['index'],
-        this.props.paginationIndex['status']
+        this.props.paginationIndex['status'],
+        this.successCallBack,
+        this.errCallback
       )
       this.setState({
         text: '',
         subject: '',
-        app: null,
+        app: url.get('app') || null,
         file: {},
         fileSrc: ''
       })
     }
   }
-
+  successCallBack = res => {
+    this.setState({
+      success: true,
+      error: false,
+      message: res.statusText
+    })
+  }
+  errCallBack = err => {
+    console.log(err)
+    this.setState({
+      error: true,
+      success: false,
+      message: err.response.data
+    })
+  }
   render () {
     const { active, text, app, fileSrc, subject, uploadedFile } = this.state
     const { appList } = this.props
@@ -107,6 +129,28 @@ class AddQuery extends Component {
             <Header as={'h3'}>How can we help you?</Header>
           </Segment>
           <Segment>
+            {this.state.success && (
+              <Message success={this.state.success} icon>
+                <Icon name='check' />
+                <Message.Content>
+                  <Message.Header>Success</Message.Header>
+                  Your query has been submitted.
+                </Message.Content>
+              </Message>
+            )}
+            {this.state.error && (
+              <Message negative={this.state.error}>
+                <Icon name='close' />
+                <Message.Header>Error</Message.Header>
+                <Message.List>
+                  {Object.keys(this.state.message).map(cat => {
+                    this.state.message[cat].map(item => {
+                      return <Message.Item>{item}</Message.Item>
+                    })
+                  })}
+                </Message.List>
+              </Message>
+            )}
             <Form encType='multiple/form-data'>
               <Form.Field>
                 <label>App</label>
@@ -142,6 +186,12 @@ class AddQuery extends Component {
                     { value: 'Other', text: 'Other', icon: 'cube' }
                   ]}
                   value={app}
+                  error={
+                    this.state.error &&
+                    Object.key(this.state.message).find(x => {
+                      return x === 'app'
+                    })
+                  }
                 />
               </Form.Field>
               <Form.Field>
@@ -153,6 +203,12 @@ class AddQuery extends Component {
                   onChange={this.handleChange}
                   name='subject'
                   placeholder='Subject'
+                  error={
+                    this.state.error &&
+                    Object.key(this.state.message).find(x => {
+                      return x === 'subject'
+                    })
+                  }
                 />
               </Form.Field>
               <Form.Field>
@@ -164,6 +220,12 @@ class AddQuery extends Component {
                   rows='3'
                   autoHeight
                   placeholder='Add Query'
+                  error={
+                    this.state.error &&
+                    Object.key(this.state.message).find(x => {
+                      return x === 'text'
+                    })
+                  }
                 />
               </Form.Field>
               <p>
@@ -248,8 +310,8 @@ function mapStateToProps (state) {
 
 const mapDispatchToProps = dispatch => {
   return {
-    AddIssue: (data, index, status) => {
-      dispatch(addIssue(data, index, status))
+    AddIssue: (data, index, status, successCallBack, errCallback) => {
+      dispatch(addIssue(data, index, status, successCallBack, errCallback))
     },
     SetAppList: () => {
       dispatch(setAppList())

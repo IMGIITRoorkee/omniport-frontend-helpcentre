@@ -1,7 +1,13 @@
 import axios from 'axios'
 
 // import urls
-import { urlWhoAmI, urlGetMaintainers, getCookie } from 'formula_one'
+import {
+  urlWhoAmI,
+  urlGetMaintainers,
+  getCookie,
+  commonApps,
+  urlAppList
+} from 'formula_one'
 import { urlQueries, urlQueryDetails, urlComments } from '../urls'
 
 export const setUser = () => {
@@ -55,16 +61,22 @@ export const changePage = (index, status) => {
 // IssueList actions end
 
 // PostIssue actions start
-export const addIssue = (data, index, status) => {
+export const addIssue = (data, index, status, successCallback, errCallback) => {
   let headers = {
     'Content-Type': 'multipart/form-data',
     'X-CSRFToken': getCookie('csrftoken')
   }
   return dispatch => {
-    axios.post(urlQueries(), data, { headers: headers }).then(res => {
-      dispatch(setIssueList(index, status))
-      dispatch(setStatusNumbers())
-    })
+    axios
+      .post(urlQueries(), data, { headers: headers })
+      .then(res => {
+        dispatch(setIssueList(index, status))
+        dispatch(setStatusNumbers())
+        successCallback(res)
+      })
+      .catch(err => {
+        errCallback(err)
+      })
   }
 }
 // PostIssue actions end
@@ -86,14 +98,19 @@ export const getMaintainers = () => {
 // Maintainers list ends
 
 // Issue actions start
-export const setActiveIssue = id => {
+export const setActiveIssue = (id, errCallback) => {
   return dispatch => {
-    axios.get(urlQueryDetails(id)).then(res => {
-      dispatch({
-        type: 'SET_ACTIVEISSUE',
-        payload: res.data
+    axios
+      .get(urlQueryDetails(id))
+      .then(res => {
+        dispatch({
+          type: 'SET_ACTIVEISSUE',
+          payload: res.data
+        })
       })
-    })
+      .catch(err => {
+        errCallback(err)
+      })
   }
 }
 

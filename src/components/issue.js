@@ -66,9 +66,11 @@ class Issue extends Component {
     const id = this.props.match.params.id
     this.props.SetUser()
     this.props.GetMaintainers()
-    this.props.SetActiveIssue(id)
+    this.props.SetActiveIssue(id, this.errCallback)
   }
-
+  errCallback = (err) => {
+    this.props.history.push('/404')
+  }
   toggleIssue = () => {
     const { activeIssue, ChangeStatusActiveIssue } = this.props
     const id = this.props.match.params.id
@@ -78,7 +80,7 @@ class Issue extends Component {
   render () {
     const { activeIssue, whoAmI } = this.props
     const id = this.props.match.params.id
-    return activeIssue
+    return !activeIssue.isEmpty
       ? <div styleName='block.issue-container'>
         <Grid textAlign='justified'>
           {isMobile &&
@@ -258,8 +260,8 @@ const mapDispatchToProps = dispatch => {
     SetUser: () => {
       dispatch(setUser())
     },
-    SetActiveIssue: id => {
-      dispatch(setActiveIssue(id))
+    SetActiveIssue: (id, errCallback) => {
+      dispatch(setActiveIssue(id, errCallback))
     },
     ChangeStatusActiveIssue: (id, newStatus) => {
       dispatch(changeStatusActiveIssue(id, newStatus))
