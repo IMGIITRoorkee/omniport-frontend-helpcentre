@@ -192,16 +192,17 @@ class Issue extends Component {
                                   size={'massive'}
                                   />
                               </Modal>
-                              : <div>
-                                <a
-                                  href={activeIssue['uploadedFile']}
-                                  target='blank'
-                                  >
-                                  <Icon name='download' color={'blue'} />
-                                  {' '}
-                                    Download Attachment
-                                  </a>
-                              </div>
+                              : <p>
+                                  <Button 
+                                    icon='download'
+                                    basic
+                                    color={getTheme()}
+                                    content='Download Attachment'
+                                    as='a'
+                                    href={activeIssue['uploadedFile']} 
+                                    download 
+                                  />
+                                </p>
                           : null}
                     </Comment.Text>
                   </Comment.Content>

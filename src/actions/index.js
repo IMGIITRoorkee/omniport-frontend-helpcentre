@@ -12,17 +12,12 @@ import { urlQueries, urlQueryDetails, urlComments } from '../urls'
 
 export const setUser = () => {
   return dispatch => {
-    axios
-      .get(urlWhoAmI())
-      .then(res => {
-        dispatch({
-          type: 'SET_USER',
-          payload: res.data
-        })
+    axios.get(urlWhoAmI()).then(res => {
+      dispatch({
+        type: 'SET_USER',
+        payload: res.data
       })
-      .catch(err => {
-        window.location.replace('/rest/login')
-      })
+    })
   }
 }
 
@@ -100,12 +95,16 @@ export const getMaintainers = () => {
 // Issue actions start
 export const setActiveIssue = (id, errCallback) => {
   return dispatch => {
+    dispatch({
+      type: 'SET_ACTIVEISSUE_LOADING',
+      payload: true
+    })
     axios
       .get(urlQueryDetails(id))
       .then(res => {
         dispatch({
           type: 'SET_ACTIVEISSUE',
-          payload: res.data
+          payload: { ...res.data, loading: false }
         })
       })
       .catch(err => {

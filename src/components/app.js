@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container } from 'semantic-ui-react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { isMobile, isBrowser } from 'react-device-detect'
@@ -50,7 +50,12 @@ class App extends Component {
               <Container styleName='blocks.content-div'>
                 <Switch>
                   <Route exact path={`${match.path}`} component={IssueList} />
-                  <Route path={`${match.path}issue/:id`} component={Issue} />
+                  <Route
+                    exact
+                    path={`${match.path}issue/:id`}
+                    component={Issue}
+                  />
+                  <Route render={props => <Redirect to='/404' />} />
                 </Switch>
               </Container>
             </Scrollbars>
