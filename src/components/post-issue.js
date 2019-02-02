@@ -101,13 +101,13 @@ class AddQuery extends Component {
     })
   }
   errCallBack = err => {
-    console.log(err)
     this.setState({
       error: true,
       success: false,
       message: err.response.data
     })
   }
+
   render () {
     const { active, text, app, fileSrc, subject, uploadedFile } = this.state
     const { appList } = this.props
