@@ -69,6 +69,7 @@ class TabPagination extends Component {
         </BrowserView>
         <MobileView>
           <Input
+            type='number'
             placeholder={this.props.page['index'] && this.props.page['index']}
             style={{ width: '4em' }}
             onKeyPress={this.handleKeyPress}
@@ -110,4 +111,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TabPagination)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TabPagination)
