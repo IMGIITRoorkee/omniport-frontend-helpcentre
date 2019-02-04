@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Grid, Header, List, Segment } from 'semantic-ui-react'
 import moment from 'moment'
 
+import CustomBreadcrumb from 'core/common/src/components/custom-breadcrumb'
 import { NonMaintainerView } from 'formula_one'
 import TabStatus from './tab-status'
 import TabPagination from './tab-pagination'
@@ -78,8 +79,8 @@ class IssueList extends Component {
         )
       })
     ) : (
-      <Segment styleName='inline.min-height-200px' color='grey'>
-        <i color='grey'>No Issues Fetched</i>
+      <Segment styleName='inline.min-height-200px'>
+        <i>No Issues Fetched</i>
       </Segment>
     )
   }
@@ -87,7 +88,8 @@ class IssueList extends Component {
   render () {
     const { whoAmI } = this.props
     return (
-      <div styleName='block.issue-list-container' ref={this.handleContextRef}>
+      <div ref={this.handleContextRef}>
+        <CustomBreadcrumb list={[{ name: 'Helpcentre' }]} />
         <Grid textAlign='justified'>
           <Grid.Row centered>
             <Grid.Column>

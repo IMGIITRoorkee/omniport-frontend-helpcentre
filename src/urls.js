@@ -1,3 +1,9 @@
+import config from '../config.json'
+
+export function urlAppBase () {
+  return config.baseUrl
+}
+
 export function urlMainApp () {
   return '/api/helpcentre/'
 }

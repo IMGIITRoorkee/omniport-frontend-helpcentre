@@ -78,7 +78,6 @@ class SideSegment extends Component {
               <Label
                 styleName='inline.margin-top-half inline.margin-bottom-half'
                 image
-                color='purple'
               >
                 {Boolean(activeIssue.uploader) &&
                 activeIssue.uploader.displayPicture ? (
@@ -108,7 +107,7 @@ class SideSegment extends Component {
                       ? typeof activeIssue.assignees[0] === 'object'
                         ? activeIssue.assignees.map(assignee => {
                           return (
-                            <Label key={assignee.id} color={getTheme()} image>
+                            <Label key={assignee.id} image>
                               {Boolean(assignee.person) &&
                               assignee.person.displayPicture ? (
                                 <img src={assignee.person.displayPicture} />
@@ -129,7 +128,7 @@ class SideSegment extends Component {
                         : this.getAssigneesFromIndex(activeIssue.assignees).map(
                           assignee => {
                             return (
-                              <Label key={assignee.id} color={getTheme()} image>
+                              <Label key={assignee.id} image>
                                 {Boolean(assignee.person) &&
                                 assignee.person.displayPicture ? (
                                   <img src={assignee.person.displayPicture} />

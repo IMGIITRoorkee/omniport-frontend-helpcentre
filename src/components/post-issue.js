@@ -286,7 +286,6 @@ class AddQuery extends Component {
                   onClick={this.handleSubmit}
                   position='right'
                   primary
-                  basic
                   icon='send'
                   content='Submit'
                   disabled={!text || !app || !subject}

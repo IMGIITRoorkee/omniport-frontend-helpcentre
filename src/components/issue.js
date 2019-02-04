@@ -18,6 +18,7 @@ import { isBrowser, isMobile } from 'react-device-detect'
 import Emojis from 'react-emoji-component'
 import { emojify } from 'react-emojione'
 
+import CustomBreadcrumb from 'core/common/src/components/custom-breadcrumb'
 import { getTheme } from 'formula_one'
 import SideSegment from './side-segment'
 import PostComment from './post-comment'
@@ -28,6 +29,7 @@ import {
   getMaintainers,
   setUser
 } from '../actions'
+import { urlAppBase } from '../urls';
 import inline from 'formula_one/src/css/inline.css'
 import block from '../css/issue.css'
 
@@ -82,6 +84,7 @@ class Issue extends Component {
     const id = this.props.match.params.id
     return !activeIssue.isEmpty
       ? <div styleName='block.issue-container'>
+        <CustomBreadcrumb list={[{ name: 'Helpcentre', link: urlAppBase() }, {name: `#${id}`}]} />
         <Grid textAlign='justified'>
           {isMobile &&
           <Grid.Row>
@@ -96,42 +99,9 @@ class Issue extends Component {
               >
               <Header as='h1'>{activeIssue['title']}</Header>
               {activeIssue.isClosed === true
-                  ? <Popup
-                    trigger={
-                      <Button positive size='small' icon='check circle' content='Resolved' />
-                      }
-                    content={
-                      <Button
-                          basic
-                          negative
-                          size='small'
-                          icon='exclamation circle'
-                          content='Mark pending'
-                          onClick={this.toggleIssue}
-                        />
-                      }
-                    on='click'
-                    position='left center'
-                    hideOnScroll
-                    />
-                  : <Popup
-                    trigger={
-                      <Button negative size='small' icon='exclamation circle' content='Pending' />
-                      }
-                    content={
-                      <Button
-                          basic
-                          positive
-                          size='small'
-                          icon='check circle'
-                          onClick={this.toggleIssue}
-                          content='Mark resolved'
-                        />
-                      }
-                    on='click'
-                    position='left center'
-                    hideOnScroll
-                    />}
+                ? <Button positive size='small' icon='check circle' content='Resolved' styleName='block.statusButton' /> 
+                : <Button negative size='small' icon='exclamation circle' content='Pending' styleName='block.statusButton' />
+              }
               <span styleName='block.issue-opener'>
                 {isBrowser &&
                 <span>
@@ -185,6 +155,7 @@ class Issue extends Component {
                                   }
                                 basic
                                 fluid
+                                closeIcon
                                 >
                                 <Image
                                   src={activeIssue['uploadedFile']}

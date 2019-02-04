@@ -1,6 +1,4 @@
-@charset "UTF-8";
 .issue-container {
-    margin-top: 20px;
 }
 .uploaded-image{
     width: 65%;
@@ -40,3 +38,8 @@
     top: 25px;
     width: 100%;
 }
+
+.statusButton{
+    cursor: default !important;
+}
+
