@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Route, Router, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Grid, Header, List, Segment } from 'semantic-ui-react'
+import { Grid, Header, List, Segment, Placeholder } from 'semantic-ui-react'
 import moment from 'moment'
 
 import CustomBreadcrumb from 'core/common/src/components/custom-breadcrumb'
@@ -64,8 +64,8 @@ class IssueList extends Component {
 
   createList () {
     const { issueList } = this.props
-    return issueList['results'] ? (
-      issueList['results'].slice(0).map(issue => {
+    return issueList['results']
+      ? issueList['results'].slice(0).map(issue => {
         return (
           <IssueBar
             id={issue.id}
@@ -78,11 +78,18 @@ class IssueList extends Component {
           />
         )
       })
-    ) : (
-      <Segment styleName='inline.min-height-200px'>
-        <i>No Issues Fetched</i>
-      </Segment>
-    )
+      : [...Array(6)].map((item, index) => {
+        return (
+          <Segment>
+            <Placeholder>
+              <Placeholder.Header>
+                <Placeholder.Line />
+                <Placeholder.Line />
+              </Placeholder.Header>
+            </Placeholder>
+          </Segment>
+        )
+      })
   }
 
   render () {

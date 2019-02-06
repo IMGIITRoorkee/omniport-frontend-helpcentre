@@ -231,7 +231,7 @@ class AddQuery extends Component {
               <p>
                 To attach more than one file, upload a <i>.zip</i> archive.
               </p>
-              <label htmlFor='uploadPhoto'>
+              <label htmlFor='uploadFile'>
                 <Button
                   as='span'
                   icon='upload'
@@ -245,7 +245,7 @@ class AddQuery extends Component {
                 type='file'
                 onChange={this.fileChange}
                 name={'uploadedFile'}
-                id='uploadPhoto'
+                id='uploadFile'
                 styleName='inline.display-none'
               />
               {fileSrc ? (

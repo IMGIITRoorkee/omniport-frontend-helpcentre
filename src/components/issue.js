@@ -8,7 +8,6 @@ import {
   Button,
   Divider,
   Grid,
-  Popup,
   Loader,
   Image,
   Modal
