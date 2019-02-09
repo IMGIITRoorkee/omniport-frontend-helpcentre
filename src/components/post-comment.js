@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Form, Button, TextArea } from 'semantic-ui-react'
+import { Form, Button, TextArea, Segment } from 'semantic-ui-react'
 
-import { addComment, addCommentChangeStatus } from '../actions'
+import {
+  addComment,
+  addCommentChangeStatus,
+  changeStatusActiveIssue
+} from '../actions'
 import inline from 'formula_one/src/css/inline.css'
 
 class PostComment extends Component {
@@ -35,6 +39,12 @@ class PostComment extends Component {
       text: ''
     })
   }
+  openIssue = () => {
+    this.props.ChangeStatusActiveIssue(this.props.queryId, false)
+    this.setState({
+      text: ''
+    })
+  }
 
   render () {
     const { text } = this.state
@@ -49,16 +59,23 @@ class PostComment extends Component {
           onChange={this.handleChange}
           styleName='inline.margin-bottom-half'
         />
-        <Button.Group floated='right' attached={false}>
+        <Button.Group basic compact floated='right'>
           <Button
-            onClick={this.commentChangeStatus}
-            disabled={this.props.activeIssue['isClosed'] || !text}
-            content='Comment and close'
+            onClick={
+              this.props.activeIssue['isClosed']
+                ? this.openIssue
+                : this.commentChangeStatus
+            }
+            disabled={!text && !this.props.activeIssue['isClosed']}
+            content={
+              this.props.activeIssue['isClosed']
+                ? 'Mark pending'
+                : 'Comment and close'
+            }
             basic
             secondary
             icon='check circle'
           />
-          <Button.Or />
           <Button
             primary
             onClick={this.comment}
@@ -87,6 +104,9 @@ const mapDispatchToProps = dispatch => {
     },
     AddCommentChangeStatus: (id, text, newStatus) => {
       dispatch(addCommentChangeStatus(id, text, newStatus))
+    },
+    ChangeStatusActiveIssue: (id, newStatus) => {
+      dispatch(changeStatusActiveIssue(id, newStatus))
     }
   }
 }

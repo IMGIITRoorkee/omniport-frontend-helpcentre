@@ -125,7 +125,7 @@ class AddQuery extends Component {
     return (
       <React.Fragment>
         <Segment.Group>
-          <Segment secondary textAlign='center'>
+          <Segment textAlign='left'>
             <Header as={'h3'}>How can we help you?</Header>
           </Segment>
           <Segment>

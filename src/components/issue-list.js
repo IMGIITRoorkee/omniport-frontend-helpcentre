@@ -108,8 +108,8 @@ class IssueList extends Component {
           <Grid.Row centered>
             <Grid.Column>
               <Segment.Group>
-                <Segment secondary textAlign='center'>
-                  <Header as={'h3'}>Issues</Header>
+                <Segment>
+                  <Header as={'h4'}>Issues</Header>
                 </Segment>
                 <TabStatus />
                 {this.createList()}
