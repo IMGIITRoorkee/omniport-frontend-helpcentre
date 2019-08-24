@@ -10,7 +10,8 @@ import {
   Grid,
   Loader,
   Image,
-  Modal
+  Modal,
+  Label
 } from 'semantic-ui-react'
 import moment from 'moment'
 import { isBrowser, isMobile } from 'react-device-detect'
@@ -29,6 +30,7 @@ import {
   setUser
 } from '../actions'
 import { urlAppBase } from '../urls';
+
 import inline from 'formula_one/src/css/inline.css'
 import block from '../css/issue.css'
 
@@ -98,8 +100,8 @@ class Issue extends Component {
               >
               <Header as='h1'>{activeIssue['title']}</Header>
               {activeIssue.isClosed === true
-                ? <Button positive size='small' icon='check circle' content='Resolved' styleName='block.statusButton' /> 
-                : <Button negative size='small' icon='exclamation circle' content='Pending' styleName='block.statusButton' />
+                ? <Label horizontal color='green' size='small' icon='check circle' content='Resolved' /> 
+                : <Label horizontal color='red' size='small' icon='exclamation circle' content='Pending' />
               }
               <span styleName='block.issue-opener'>
                 {isBrowser &&
