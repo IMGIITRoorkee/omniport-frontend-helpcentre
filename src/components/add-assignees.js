@@ -4,7 +4,7 @@ import axios from 'axios'
 import { Form, Search, Icon } from 'semantic-ui-react'
 
 import { changeAssignees } from '../actions'
-import { getTheme, UserCard } from 'formula_one'
+import { UserCard } from 'formula_one'
 import { urlSearchMaintainer } from '../urls'
 
 import inline from 'formula_one/src/css/inline.css'
@@ -36,7 +36,12 @@ class AddAssignees extends React.Component {
   }
   handleResultSelect = (e, { result }) => {
     const { activeIssue } = this.props
-    const data = [...activeIssue.assignees.map(x => x.id), result.person.id]
+    const data = [
+      ...activeIssue.assignees.map(x => {
+        return x.id ? x.id : x
+      }),
+      result.person.id
+    ]
     this.props.ChangeAssignees(activeIssue.id, data)
   }
   render () {
@@ -49,7 +54,7 @@ class AddAssignees extends React.Component {
         image={person.person.displayPicture}
         right={
           activeIssue.assignees.find(x => {
-            return x.id === person.id
+            return x.id ? x.id === person.id : x === person.id
           }) && <Icon name='check' color='green' />
         }
       />
