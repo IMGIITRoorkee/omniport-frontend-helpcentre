@@ -7,10 +7,11 @@ import {
   addCommentChangeStatus,
   changeStatusActiveIssue
 } from '../actions'
+import { MaintainerView } from 'formula_one'
 import inline from 'formula_one/src/css/inline.css'
 
 class PostComment extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       text: '',
@@ -46,7 +47,7 @@ class PostComment extends Component {
     })
   }
 
-  render () {
+  render() {
     const { text } = this.state
     return (
       <Form encType='multiple/form-data'>
@@ -60,22 +61,24 @@ class PostComment extends Component {
           styleName='inline.margin-bottom-half'
         />
         <Button.Group basic compact floated='right'>
-          <Button
-            onClick={
-              this.props.activeIssue['isClosed']
-                ? this.openIssue
-                : this.commentChangeStatus
-            }
-            disabled={!text && !this.props.activeIssue['isClosed']}
-            content={
-              this.props.activeIssue['isClosed']
-                ? 'Mark pending'
-                : 'Comment and close'
-            }
-            basic
-            secondary
-            icon='check circle'
-          />
+          <MaintainerView which='helpcentre'>
+            <Button
+              onClick={
+                this.props.activeIssue['isClosed']
+                  ? this.openIssue
+                  : this.commentChangeStatus
+              }
+              disabled={!text && !this.props.activeIssue['isClosed']}
+              content={
+                this.props.activeIssue['isClosed']
+                  ? 'Mark pending'
+                  : 'Comment and close'
+              }
+              basic
+              secondary
+              icon='check circle'
+            />
+          </MaintainerView>
           <Button
             primary
             onClick={this.comment}
@@ -90,7 +93,7 @@ class PostComment extends Component {
   }
 }
 
-function mapStateToProps (state) {
+function mapStateToProps(state) {
   return {
     whoAmI: state.whoAmI,
     activeIssue: state.activeIssue
