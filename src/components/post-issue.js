@@ -167,7 +167,7 @@ class AddQuery extends Component {
                         value: app.nomenclature.verboseName,
                         text: app.nomenclature.verboseName
                       }
-                      if (app.assets.favicon) {
+                      if (app.assets && app.assets.favicon) {
                         option['image'] = {
                           src: `/static/${app.baseUrls.static}${
                             app.assets.favicon
