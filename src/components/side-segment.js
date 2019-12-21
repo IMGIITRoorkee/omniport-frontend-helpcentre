@@ -1,5 +1,12 @@
 import React, { Component, Fragment } from 'react'
-import { Icon, Dropdown, List, Segment, Label } from 'semantic-ui-react'
+import {
+  Icon,
+  Dropdown,
+  List,
+  Segment,
+  Label,
+  Checkbox
+} from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import moment from 'moment'
 
@@ -9,7 +16,9 @@ import {
   changeStatusActiveIssue,
   changeAssignees,
   getMaintainers,
-  setUser
+  setUser,
+  setAllowsPolyjuice,
+  changeAllowsPolyjuice
 } from '../actions'
 import AddAssignees from './add-assignees'
 
@@ -18,13 +27,15 @@ import inline from 'formula_one/src/css/inline.css'
 class SideSegment extends Component {
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {
+    }
   }
 
   componentDidMount () {
     this.props.SetUser()
     this.props.GetMaintainers()
     this.props.SetActiveIssue(this.props.id)
+    this.props.SetAllowsPolyjuice()
   }
 
   getAssigneesFromIndex = a => {
@@ -55,8 +66,12 @@ class SideSegment extends Component {
   }
   handleContextRef = contextRef => this.setState({ contextRef })
 
+  handleChangeAllowPolyjuice = (e, {checked}) => {
+    this.props.ChangeAllowsPolyjuice(checked)
+  }
+
   render () {
-    const { activeIssue, whoAmI, maintainers } = this.props
+    const { activeIssue, whoAmI, maintainers, allowsPolyjuice } = this.props
     return (
       <Segment color={activeIssue.isClosed === true ? 'green' : 'red'}>
         <List divided relaxed>
@@ -93,6 +108,21 @@ class SideSegment extends Component {
             <List.Content>
               <List.Header>App</List.Header>
               {activeIssue.appName}
+            </List.Content>
+          </List.Item>
+          <List.Item>
+            <List.Content>
+              <List.Header>Allow maintianer access</List.Header>
+              <Checkbox
+                styleName='inline.margin-top-half inline.margin-bottom-half'
+                toggle
+                checked={
+                  allowsPolyjuice.isLoaded &&
+                  allowsPolyjuice.data.polyjuiceAllowed
+                }
+                onChange={this.handleChangeAllowPolyjuice}
+                label='Allow maintainers to access your account'
+              />
             </List.Content>
           </List.Item>
           {activeIssue.assignees ? (
@@ -176,7 +206,8 @@ function mapStateToProps (state) {
   return {
     maintainers: state.maintainers,
     whoAmI: state.whoAmI,
-    activeIssue: state.activeIssue
+    activeIssue: state.activeIssue,
+    allowsPolyjuice: state.allowsPolyjuice
   }
 }
 
@@ -196,6 +227,12 @@ const mapDispatchToProps = dispatch => {
     },
     GetMaintainers: () => {
       dispatch(getMaintainers())
+    },
+    SetAllowsPolyjuice: () => {
+      dispatch(setAllowsPolyjuice())
+    },
+    ChangeAllowsPolyjuice: allowsPolyjuice => {
+      dispatch(changeAllowsPolyjuice(allowsPolyjuice))
     }
   }
 }

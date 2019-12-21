@@ -19,6 +19,10 @@ export function urlComments () {
   return `${urlMainApp()}comments/`
 }
 
+export function urlAllowsPolyjuice () {
+  return `${urlMainApp()}allows_polyjuice/`
+}
+
 export function urlSearchMaintainer () {
   return `/api/yellow_pages/maintainer/`
 }

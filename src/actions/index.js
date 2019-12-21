@@ -8,7 +8,12 @@ import {
   commonApps,
   urlAppList
 } from 'formula_one'
-import { urlQueries, urlQueryDetails, urlComments } from '../urls'
+import {
+  urlQueries,
+  urlQueryDetails,
+  urlComments,
+  urlAllowsPolyjuice
+} from '../urls'
 
 export const setUser = () => {
   return dispatch => {
@@ -286,5 +291,40 @@ export const setAppList = () => {
         })
       })
       .catch(err => {})
+  }
+}
+
+export const setAllowsPolyjuice = () => {
+  return dispatch => {
+    axios.get(urlAllowsPolyjuice()).then(res => {
+      dispatch({
+        type: 'SET_ALLOWS_POLYJUICE',
+        payload: {
+          isLoaded: true,
+          data: res.data
+        }
+      })
+    })
+  }
+}
+
+export const changeAllowsPolyjuice = allowsPolyjuice => {
+  const data = {
+    allowsPolyjuice
+  }
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-CSRFToken': getCookie('csrftoken')
+  }
+  return dispatch => {
+    axios.post(urlAllowsPolyjuice(), data, { headers: headers }).then(res => {
+      dispatch({
+        type: 'SET_ALLOWS_POLYJUICE',
+        payload: {
+          isLoaded: true,
+          data: res.data
+        }
+      })
+    })
   }
 }

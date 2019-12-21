@@ -6,6 +6,7 @@ import Maintainers from './maintainersList'
 import ActiveIssue from './activeIssue'
 import StatusNumbers from './statusNumbers'
 import AppList from './appList'
+import allowsPolyjuice from './allowsPolyjuice'
 
 const rootReducers = combineReducers({
   whoAmI: WhoAmI,
@@ -14,7 +15,8 @@ const rootReducers = combineReducers({
   maintainers: Maintainers,
   activeIssue: ActiveIssue,
   statusNumbers: StatusNumbers,
-  appList: AppList
+  appList: AppList,
+  allowsPolyjuice
 })
 
 export default rootReducers
