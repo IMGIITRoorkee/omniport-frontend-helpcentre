@@ -4,7 +4,8 @@ import {
   List,
   Segment,
   Label,
-  Checkbox
+  Checkbox, 
+  Popup
 } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import moment from 'moment'
@@ -121,6 +122,15 @@ class SideSegment extends Component {
                 }
                 onChange={this.handleChangeAllowPolyjuice}
                 label='Allow maintainers to access your account'
+              />
+              <Popup 
+                content='This will give one-time access to the maintainers to 
+                log in to your account. You can revoke the permission once 
+                given. Only allow this if you have full confidence in the 
+                maintainer asking you for permission.'
+                trigger={
+                <Icon name='help circle' style={{marginLeft: '0.25em'}} />
+                }
               />
             </List.Content>
           </List.Item>
