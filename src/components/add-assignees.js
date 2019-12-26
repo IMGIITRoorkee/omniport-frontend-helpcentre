@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import axios from 'axios'
 import { Form, Search, Icon } from 'semantic-ui-react'
+import { debounce } from 'lodash'
 
 import { changeAssignees } from '../actions'
 import { UserCard } from 'formula_one'
@@ -18,21 +19,23 @@ class AddAssignees extends React.Component {
       results: []
     }
   }
-  handleSearchChange = (e, { value }) => {
+  handleSearchChange = value => {
     this.setState({
       value: value,
-      isLoading: true
+      isLoading: Boolean(value)
     })
-    axios
-      .get(urlSearchMaintainer(), { params: { search: value } })
-      .then(res => {
-        this.setState({
-          results: res.data.slice(0, 3).map(person => {
-            return { person, title: person.person.fullName }
-          }),
-          isLoading: false
+    if (value) {
+      axios
+        .get(urlSearchMaintainer(), { params: { search: value } })
+        .then(res => {
+          this.setState({
+            results: res.data.slice(0, 3).map(person => {
+              return { person, title: person.person.fullName }
+            }),
+            isLoading: false
+          })
         })
-      })
+    }
   }
   handleResultSelect = (e, { result }) => {
     const { activeIssue } = this.props
@@ -45,9 +48,9 @@ class AddAssignees extends React.Component {
     this.props.ChangeAssignees(activeIssue.id, data)
   }
   render () {
-    const { isLoading, value, results } = this.state
+    const { isLoading, results } = this.state
     const { activeIssue } = this.props
-    const resultRenderer = ({ person, title }) => (
+    const resultRenderer = ({ person }) => (
       <UserCard
         key={person.id}
         name={person.person.fullName}
@@ -65,10 +68,12 @@ class AddAssignees extends React.Component {
           <Form.Field>
             <Search
               loading={isLoading || !activeIssue.assignees}
-              onSearchChange={this.handleSearchChange}
+              onSearchChange={debounce(
+                (e, { value }) => this.handleSearchChange(value),
+                500
+              )}
               onResultSelect={this.handleResultSelect}
               results={results}
-              value={value}
               fluid
               input={{ fluid: true }}
               resultRenderer={resultRenderer}

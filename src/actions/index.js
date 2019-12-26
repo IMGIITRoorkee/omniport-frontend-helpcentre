@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { toast } from 'react-semantic-toasts'
 
 // import urls
 import {
@@ -43,8 +44,15 @@ export const setIssueList = (id, status) => {
           payload: res.data
         })
       })
-      .catch(err => {
-        console.log(err)
+      .catch(() => {
+        toast({
+          type: 'error',
+          title: 'Error',
+          description: 'Some error occured while fetching the queries',
+          animation: 'fade up',
+          icon: 'frown up',
+          time: 3000
+        })
       })
   }
 }
@@ -92,7 +100,17 @@ export const getMaintainers = () => {
           payload: res.data
         })
       })
-      .catch(err => {})
+      .catch(() => {
+        toast({
+          type: 'error',
+          title: 'Error',
+          description:
+            'Some error occured while setting up the maintainers list',
+          animation: 'fade up',
+          icon: 'frown up',
+          time: 3000
+        })
+      })
   }
 }
 // Maintainers list ends
@@ -290,7 +308,16 @@ export const setAppList = () => {
           }
         })
       })
-      .catch(err => {})
+      .catch(() => {
+        toast({
+          type: 'error',
+          title: 'Error',
+          description: 'Some error occured while seeting up the app list',
+          animation: 'fade up',
+          icon: 'frown up',
+          time: 3000
+        })
+      })
   }
 }
 

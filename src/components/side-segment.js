@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import {
   Icon,
-  Dropdown,
   List,
   Segment,
   Label,
@@ -10,7 +9,7 @@ import {
 import { connect } from 'react-redux'
 import moment from 'moment'
 
-import { ifRole, MaintainerView, getTheme } from 'formula_one'
+import { ifRole, MaintainerView } from 'formula_one'
 import {
   setActiveIssue,
   changeStatusActiveIssue,
