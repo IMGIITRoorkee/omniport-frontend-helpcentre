@@ -93,7 +93,11 @@ export const addIssue = (data, index, status, successCallback, errCallback) => {
 export const getMaintainers = () => {
   return dispatch => {
     axios
-      .get(urlGetMaintainers())
+      .get(urlGetMaintainers(), {
+        params: {
+	  search: ''
+	}
+      })
       .then(res => {
         dispatch({
           type: 'UPDATE_MAINTAINERS',
