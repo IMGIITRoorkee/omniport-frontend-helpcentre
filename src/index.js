@@ -1,41 +1,29 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 import { createStore, applyMiddleware } from 'redux'
-import { Provider } from 'react-redux'
-import { connect } from 'react-redux'
+import { Provider, connect } from 'react-redux'
 import thunk from 'redux-thunk'
 
-import PRoute from 'services/auth/pRoute'
 import { whoami } from 'services/auth/src/actions'
-
-import App from './components/app'
+import PRoute from 'services/auth/pRoute'
+import App from './app'
 import rootReducers from './reducers'
 
-const mapDisPatchToProps = dispatch => {
-  return {
-    whoami: () => dispatch(whoami()),
-  }
-}
-@connect(
-  null,
-  mapDisPatchToProps
-)
-export default class AppRouter extends Component {
-  constructor(props) {
-    super(props)
-    this.store = createStore(rootReducers, applyMiddleware(thunk))
-  }
+const mapDispatchToProps = dispatch => ({
+  whoami: () => dispatch(whoami()),
+})
 
-  componentDidMount() {
-    this.props.whoami()
-  }
+const AppRouter = connect(null, mapDispatchToProps)(props => {
+  const { match, whoami } = props
 
-  render() {
-    const { match } = this.props
-    return (
-      <Provider store={this.store}>
-        <PRoute path={`${match.path}/`} component={App} />
-        {/* Default Route */}
-      </Provider>
-    )
-  }
-}
+  useEffect(() => {
+    whoami()
+  }, [whoami])
+
+  return (
+    <Provider store={createStore(rootReducers, applyMiddleware(thunk))}>
+      <PRoute path={`${match.path}/`} component={App} />
+    </Provider>
+  )
+})
+
+export default AppRouter
