@@ -30,7 +30,7 @@ const TabPagination = ({ issueList, page, SetUser, SetStatusNumbers, SetIssueLis
 			return
 		ChangePage(activePage, page.status)
 		SetIssueList(activePage, page.status)
-		setCurrentPage(activePage)
+		setActivePage(activePage)
 	}
 
 	const handleInputChange = (event) => {
