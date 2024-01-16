@@ -16,7 +16,7 @@ const App = ({ match  , getMaintainers }) => {
 
   return (
      <Scrollbars autoHide>
-      <div className={tailwindWrapper("py-4 pl-6 pr-9 h-[100%] font-Inter")}>
+      <div className={tailwindWrapper("py-4 md:px-9 px-4 h-[100%] font-Inter")}>
         <span className={tailwindWrapper("flex-grow-2 text-xl text-black-500 font-semibold")}>Helpcentre</span>
         <Switch>
           <Route exact path={`${match.path}`} component={Home} />

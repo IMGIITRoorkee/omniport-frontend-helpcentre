@@ -38,10 +38,10 @@ const Home = ({ appList, SetAppList }) => {
     return (
         <div>
             <div> 
-                <div className={tailwindWrapper("flex justify-between")}>
+                <div className={tailwindWrapper("flex max-[400px]:flex-col gap-3 justify-between")}>
                     <SearchBar />
                     <Link to="/helpcentre/issues" className={tailwindWrapper("mt-auto")}>
-                        <button className={tailwindWrapper(`text-white text-sm h-max rounded-md px-6 py-2.5 ${themeBg[theme]}`)}>
+                        <button className={tailwindWrapper(`block ml-auto text-white text-sm h-max rounded-md px-6 py-2.5 ${themeBg[theme]}`)}>
                         Report Issue
                         </button>
                     </Link>
@@ -49,7 +49,7 @@ const Home = ({ appList, SetAppList }) => {
             </div>
             <div className={tailwindWrapper("flex flex-col md:flex-row justify-between h-full mt-12 px-4")}>
                 <div className={tailwindWrapper("md:w-2/3")}>
-                    <Dropdown options={options} selectedOption={selectedApp} setOption={setApp} open={open} setOpen={setOpen} width={"w-full"} otherContent={OtherApp} placeholder={"Select an App"}/>
+                    <Dropdown options={options} selectedOption={selectedApp} setOption={setApp} open={open} setOpen={setOpen} width={"w-full md:w-2/3"} otherContent={OtherApp} placeholder={"Select an App"}/>
                     <Accordion faqText={faqText} />
                 </div>
                 <div>
