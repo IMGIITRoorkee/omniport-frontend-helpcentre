@@ -63,7 +63,7 @@ const IssuePage = (props) => {
                 <AddQuery history={props.history} />
                 </NonMaintainerView>
             </div>
-            <div className={tailwindWrapper("md:w-3/4 w-full border rounded-md border-[#DEDEDF] mt-14 mb-4 pt-4")}>
+            <div className={tailwindWrapper("md:w-3/4 w-full border rounded-md border-[#DEDEDF] md:mt-14 mt-8 mb-4 pt-4")}>
                 <span className={tailwindWrapper("flex-grow-2 text-md text-black-500 font-semibold px-4")}>
                     Issues
                 </span>

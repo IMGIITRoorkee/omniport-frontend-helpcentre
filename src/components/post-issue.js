@@ -103,7 +103,7 @@ const AddQuery = ({ history, appList, AddIssue, SetAppList, paginationIndex}) =>
     options.push({ key: 0, value: 'Other', text: 'Other' })
   
     return (
-        <div className={tailwindWrapper("px-4 md:w-3/4 w-full border rounded border-[#DEDEDF] ml-3 mt-14 mb-4 pt-4")}> 
+        <div className={tailwindWrapper("px-4 md:w-3/4 w-full border rounded border-[#DEDEDF] mt-8 md:mt-14 mb-4 pt-4")}> 
             {success && (
                 <div className={tailwindWrapper("bg-green-100 border border-green-400 text-green-700 px-4 py-3 mb-1 rounded relative")} role="alert">
                     <strong className={tailwindWrapper("font-bold")}>Success!</strong>
