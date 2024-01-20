@@ -22,8 +22,7 @@ const TabPagination = ({ issueList, page, SetUser, SetStatusNumbers, SetIssueLis
 	useEffect(() => {
 		SetUser()
 		SetStatusNumbers()
-		SetIssueList(1, 'opened')
-	}, [SetUser, SetStatusNumbers, SetIssueList])
+	}, [SetUser, SetStatusNumbers])
 
 	const handlePageChange = (activePage) => {
 		if(activePage < 1 || activePage > totalPages) 

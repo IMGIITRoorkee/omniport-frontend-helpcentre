@@ -13,7 +13,6 @@ const TabStatus = ({ whoAmI, statusNumbers, SetUser, SetIssueList, ChangePage, S
     useEffect(() => {
         SetUser()
         SetStatusNumbers()
-        SetIssueList(1, 'opened')
     }, [SetUser, SetIssueList, SetStatusNumbers])
 
     useEffect(() => {

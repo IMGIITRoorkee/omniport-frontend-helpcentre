@@ -15,8 +15,8 @@ const IssueBar = ({ id, isClosed, title, datetimeCreated, fullName, appName }) =
     <Link to={`/helpcentre/issue/${id}`} className={tailwindWrapper("hover:text-black")}>
         <div className={tailwindWrapper(`border-t-2 ${isClosed ? "border-green-600" : "border-red-600"} mb-4 rounded-md`)}>
             <div className={tailwindWrapper("border-l border-r border-b border-[#DEDEDF] p-2 rounded-md")}>
-                <div className={tailwindWrapper(`flex justify-content items-center p-1 gap-2 ${isClosed ? "text-green" : "text-red"}`)}>
-                    {isClosed ? <ResolvedIcon /> : <PendingIcon isActive={true} />}
+                <div className={tailwindWrapper(`flex justify-content items-center p-1 gap-2`)}>
+                    <span className={tailwindWrapper(`${isClosed && "text-green-600"}`)}>{isClosed ? <ResolvedIcon /> : <PendingIcon isActive={true} />}</span>
                     <div>
                         <div className={tailwindWrapper("font-bold")}>{title}</div>
                         <div className={tailwindWrapper("text-[#586069]")}>
