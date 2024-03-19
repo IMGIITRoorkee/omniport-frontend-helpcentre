@@ -5,7 +5,7 @@ import { themeText } from '../constants/theme'
 import { getTheme } from 'formula_one'
 import { useRef } from 'react'
 
-const AccordionItem = ({item, isOpen, toggleAccordion}) => {
+const AccordionItem = ({item, isOpen, toggleAccordion, openDescription, toggleDescription}) => {
     const theme = getTheme()
     const ref = useRef(null)
 
@@ -34,7 +34,7 @@ const AccordionItem = ({item, isOpen, toggleAccordion}) => {
                             <p className={tailwindWrapper("text-sm leading-2 font-semibold text-[#989DB1]")}>{item.data}</p>
                             <div className={tailwindWrapper("flex justify-content gap-14 pt-2 pb-5 text-md")}>
                                 <span className={tailwindWrapper("text-[#676767]")}>Still facing problem?</span>
-                                <button className={tailwindWrapper(`${themeText[theme]} font-semibold`)}>Report</button>
+                                <button className={tailwindWrapper(`${themeText[theme]} font-semibold`)} >Report</button>
                             </div>
                         </div>
                     </div>
