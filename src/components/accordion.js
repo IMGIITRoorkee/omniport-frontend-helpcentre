@@ -5,9 +5,13 @@ import { themeText } from '../constants/theme'
 import { getTheme } from 'formula_one'
 import { useRef } from 'react'
 
-const AccordionItem = ({item, isOpen, toggleAccordion, openDescription, toggleDescription}) => {
+const AccordionItem = ({item, isOpen, toggleAccordion, toggleDescription}) => {
     const theme = getTheme()
     const ref = useRef(null)
+
+    const handleReport=()=>{
+        toggleDescription(false);
+    }
 
     const [contentHeight, setContentHeight] = useState(0)
     useEffect(() => {
@@ -34,7 +38,7 @@ const AccordionItem = ({item, isOpen, toggleAccordion, openDescription, toggleDe
                             <p className={tailwindWrapper("text-sm leading-2 font-semibold text-[#989DB1]")}>{item.data}</p>
                             <div className={tailwindWrapper("flex justify-content gap-14 pt-2 pb-5 text-md")}>
                                 <span className={tailwindWrapper("text-[#676767]")}>Still facing problem?</span>
-                                <button className={tailwindWrapper(`${themeText[theme]} font-semibold`)} >Report</button>
+                                <button className={tailwindWrapper(`${themeText[theme]} font-semibold`)} onClick={handleReport} >Report</button>
                             </div>
                         </div>
                     </div>
@@ -43,19 +47,27 @@ const AccordionItem = ({item, isOpen, toggleAccordion, openDescription, toggleDe
     )
 }
 
-const Accordion = ({ faqText }) => {
-    const [openIndex, setOpenIndex] = useState(null)
+const Accordion = ({ faqText, toggleDescription }) => {
+  const [openIndex, setOpenIndex] = useState(null);
 
-    const toggleAccordion = (index) => {
-        setOpenIndex((prevIndex) => (prevIndex === index ? null : index))
-    }
+  const toggleAccordion = (index) => {
+    setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
   return (
-    <div className={tailwindWrapper("flex flex-col gap-7 pt-12 text-[#787B8C]")}>
-        {faqText.map((item, index) => (
-            <AccordionItem key={index} item={item} isOpen={index === openIndex} toggleAccordion={() => toggleAccordion(index)} />
-        ))}
+    <div
+      className={tailwindWrapper("flex flex-col gap-7 pt-12 text-[#787B8C]")}
+    >
+      {faqText.map((item, index) => (
+        <AccordionItem
+          key={index}
+          item={item}
+          isOpen={index === openIndex}
+          toggleAccordion={() => toggleAccordion(index)}
+          toggleDescription={toggleDescription} 
+        />
+      ))}
     </div>
-  )
-}
+  );
+};
 
 export default Accordion

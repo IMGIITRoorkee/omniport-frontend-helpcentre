@@ -1,53 +1,63 @@
 import React, { useEffect, useState } from "react";
 
 import { tailwindWrapper } from "formula_one/src/utils/tailwindWrapper";
-import { themeText } from "../constants/theme";
+import { themeBg} from "../constants/theme";
 import { getTheme } from "formula_one";
-import { useRef } from "react";
 
-const AddDescriptionBox = ({ isOpen }) => {
 
-    
+const AddDescriptionBox = ({toggleDescription}) => {
+
+  const theme = getTheme();
+  const handleCancel = () => {
+    console.log("i am there");
+    toggleDescription(false);
+  };
+
   return (
     <div
-    //   className={tailwindWrapper(
-    //     ""
-    //   )}
+      className={tailwindWrapper(
+        "fixed inset-0 bg-black bg-opacity-20 flex justify-center items-center"
+      )}
     >
-      {isOpen} &&
-      <div>
-        <input
-          placeholder="Add Description"
+      <div
+        className={tailwindWrapper(
+          "bg-white p-4 md:w-1/3 w-3/4 h-1/4 rounded flex flex-col"
+        )}
+      >
+        <div
           className={tailwindWrapper(
-            "p-2.5 placeholder-gray-400 text-black w-full focus:outline-none"
-          )}
-        />
-      </div>
-      <div>
-        <button
-          className={tailwindWrapper(
-            `block ml-auto text-white text-sm h-max rounded-md px-6 py-2.5 ${themeBg[theme]}`
+            " flex flex-col h-3/4"
           )}
         >
-          Cancel
-        </button>
-        <button
-          className={tailwindWrapper(
-            `block ml-auto text-white text-sm h-max rounded-md px-6 py-2.5 ${themeBg[theme]}`
-          )}
-        >
-          Report Issue
-        </button>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+            Add Description
+          </h3>
+          <input
+            className={tailwindWrapper(
+              "p-2.5 placeholder-gray-400 my-2 h-3/4 text-black border border-gray-400 w-full focus:outline-none"
+            )}
+          />
+        </div>
+        <div className={tailwindWrapper("flex md:flex-row m-2 items-end gap-8")}>
+          <button
+            className={tailwindWrapper(
+              `block text-white text-sm h-max rounded-md px-6 py-2.5 ${themeBg[theme]}`
+            )}
+            onClick={handleCancel}
+          >
+            Cancel
+          </button>
+          <button
+            className={tailwindWrapper(
+              `block text-white text-sm h-max rounded-md px-6 py-2.5 ${themeBg[theme]}`
+            )}
+          >
+            Report Issue
+          </button>
+        </div>
       </div>
-      {/* add two button */}
     </div>
   );
 };
-{
-  /* <div>
-          <div>Quick Guides</div>
-          <div>
-            <Article />
-          </div>
-        </div> */
-}
+
+export default AddDescriptionBox;

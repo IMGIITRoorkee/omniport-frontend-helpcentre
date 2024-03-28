@@ -39,11 +39,9 @@ const Home = ({ appList, SetAppList }) => {
   });
   options.push({ key: 0, value: "Other", text: "Other" });
 
-  // const toggleDescription=({openDescription})=>{
-  //   //this function , addDescription ,setDescription variable need to given to search dropwdown 
-  //   //componenet and add description component and accordian faq component
-  //   setDescription(!openDescription)
-  // }
+  const toggleDescription=({description})=>{
+    setDescription(!description);
+  }
 
 
   useEffect(() => {
@@ -52,49 +50,58 @@ const Home = ({ appList, SetAppList }) => {
 
   return (
     <div>
-      <div>
-        <div
-          className={tailwindWrapper(
-            "flex max-[400px]:flex-col gap-3 justify-between"
-          )}
-        >
-          <SearchBar />
-          <Link to="/helpcentre/issues" className={tailwindWrapper("mt-auto")}>
-            <button
-              className={tailwindWrapper(
-                `block ml-auto text-white text-sm h-max rounded-md px-6 py-2.5 ${themeBg[theme]}`
-              )}
+        <div>
+          <div
+            className={tailwindWrapper(
+              "flex max-[400px]:flex-col gap-3 justify-between"
+            )}
+          >
+            <SearchBar />
+            <Link
+              to="/helpcentre/issues"
+              className={tailwindWrapper("mt-auto")}
             >
-              Report Issue
-            </button>
-          </Link>
-        </div>
-      </div>
-      <div
-        className={tailwindWrapper(
-          "flex flex-col md:flex-row justify-between h-full mt-12 px-4"
-        )}
-      >
-        <div className={tailwindWrapper("md:w-2/4")}>
-          <Dropdown
-            options={options}
-            selectedOption={selectedApp}
-            setOption={setApp}
-            open={open}
-            setOpen={setOpen}
-            width={"w-full md:w-2/3"}
-            otherContent={OtherApp}
-            placeholder={"Select an App"}
-          />
-          <Accordion faqText={faqText} />
-        </div>
-        <div className={tailwindWrapper("md:w-1/4")}>
-          <div>Quick Guides</div>
-          <div>
-            <Article />
+              <button
+                className={tailwindWrapper(
+                  `block ml-auto text-white text-sm h-max rounded-md px-6 py-2.5 ${themeBg[theme]}`
+                )}
+              >
+                Report Issue
+              </button>
+            </Link>
           </div>
         </div>
-      </div>
+        <div
+          className={tailwindWrapper(
+            "flex flex-col md:flex-row justify-between h-full mt-12 px-4"
+          )}
+        >
+          <div className={tailwindWrapper("md:w-2/4")}>
+            <Dropdown
+              options={options}
+              selectedOption={selectedApp}
+              setOption={setApp}
+              open={open}
+              setOpen={setOpen}
+              width={"w-full md:w-2/3"}
+              otherContent={OtherApp}
+              placeholder={"Select an App"}
+            />
+            <Accordion
+              faqText={faqText}
+              toggleDescription={toggleDescription}
+            />
+          </div>
+          <div className={tailwindWrapper("md:w-1/4")}>
+            <div>Quick Guides</div>
+            <div>
+              <Article />
+            </div>
+          </div>
+        </div>
+      {openDescription && (
+        <AddDescriptionBox toggleDescription={setDescription} />
+      )}
     </div>
   );
 };
