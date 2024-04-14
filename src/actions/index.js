@@ -375,25 +375,5 @@ export const getSearch = (value, successCallBack, errCallBack) => {
     .catch((error) => {
       errCallBack(error);
     })
-  // return (dispatch) => {
-  //   console.log(url);
-  //   axios.get(url)
-  //     .then((response) => {
-  //       console.log(response);
-  //       successCallBack(response)
-  //       const searchData = response.data
-  //       dispatch({
-  //         type : 'SEARCH_FOUND',
-  //         payload : searchData
-  //       })
-  //     })
-  //     .catch((error) => {
-  //       errCallBack(error);
-  //       dispatch({
-  //         type: 'SEARCH_ERROR',
-  //         payload: error.message
-  //       })
-  //     })
-  // }
 }
 

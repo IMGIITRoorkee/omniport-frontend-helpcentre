@@ -14,64 +14,17 @@ const SearchBar = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const theme = getTheme();
 
-  // const handleSearchChange = (event) => {
-  //   const { value } = event.target;
-  //   setSearchTerm(value);
-
-  //   if (value.trim() === '') {
-  //     setOptions([]);
-  //     setShowOptions(false);
-  //   } else {
-  //     setOptions([
-  //       { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] },
-  //       { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] },
-  //       { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] }
-  //     ]); 
-  //     setShowOptions(true); 
-  //   }
-  // };
-
   const handleSearchChange = (event) => {
-    console.log("here")
     const { value } = event.target;
     setSearchTerm(value);
 
-
-    // this.setState({ isLoading: true, value })
-    // this.setState({ value: value })
-    // let url = urlQueries();
-    // url = url + 'search/?search=' + value
-    // useEffect(() => {
-    //   props.getSearch(url, this.successCallBack, this.errCallBack);
-    // }, [])
-
     if (value.trim() === '') {
-      console.log("emptyyyy");
       setOptions([]);
       setShowOptions(false);
     } else {
       setIsLoading(true);
-      // let url = urlQueries();
-      // url = url + 'search/?search=' + value;
-      // console.log(url);
       getSearch(value, successCallBack, errCallBack);
     }
-    // setOptions([
-    //   { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] },
-    //   { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] },
-    //   { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] }
-    // ]);
-    //   props.options.results.map((query) => (
-    //     <SearchBarOptions label={query.title} tags={query.related_tags} app={query.app} />
-    //   ))
-    //   setShowOptions(true);
-    // }
-    // setTimeout(() => {
-    //   if (this.state.value.length < 1) return this.resetComponent()
-    //   this.setState({
-    //     isLoading: false
-    //   })
-    // }, 300)
   }
 
   const successCallBack = (response) => {
@@ -111,11 +64,6 @@ const SearchBar = (props) => {
                       <div className={tailwindWrapper("bg-[#E0D7F4] text-[#6435C9] px-3 py-0.5 rounded-full rounded-s-xl rounded-e-xl mr-4 h-5 text-xs font-medium")}>
                         {option.appName}
                       </div>
-                      {/* {option.relatedTag.map((tag, tagIndex) => (
-                        <div key={tagIndex} className={tailwindWrapper("bg-[#E0D7F4] text-[#6435C9] px-3 py-0.5 rounded-full rounded-s-xl rounded-e-xl mr-4 h-5 text-xs font-medium")}>
-                          {tag}
-                        </div>
-                      ))} */}
                       <div className={tailwindWrapper("bg-[#E0D7F4] text-[#6435C9] px-3 py-0.5 rounded-full rounded-s-xl rounded-e-xl mr-4 h-5 text-xs font-medium")}>
                         {option.relatedTag}
                       </div>
