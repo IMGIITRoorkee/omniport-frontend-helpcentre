@@ -16,6 +16,10 @@ export function urlQueries () {
   return `${urlMainApp()}query/`
 }
 
+export function urlQueriesSearch () {
+  return `${urlQueries()}search/`
+}
+
 export function urlQueryDetails (id) {
   return `${urlQueries()}${id}/`
 }
