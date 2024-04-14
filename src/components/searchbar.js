@@ -1,31 +1,90 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { tailwindWrapper } from "formula_one/src/utils/tailwindWrapper";
 import { getTheme } from 'formula_one'
 import { themeText } from '../constants/theme'
+import { urlQueries } from '../urls';
+import { getSearch } from '../actions';
+import { Link } from 'react-router-dom';
 
 
-const SearchBar = () => {
+const SearchBar = (props) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [options, setOptions] = useState([]);
   const [showOptions, setShowOptions] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const theme = getTheme();
 
+  // const handleSearchChange = (event) => {
+  //   const { value } = event.target;
+  //   setSearchTerm(value);
+
+  //   if (value.trim() === '') {
+  //     setOptions([]);
+  //     setShowOptions(false);
+  //   } else {
+  //     setOptions([
+  //       { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] },
+  //       { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] },
+  //       { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] }
+  //     ]); 
+  //     setShowOptions(true); 
+  //   }
+  // };
+
   const handleSearchChange = (event) => {
+    console.log("here")
     const { value } = event.target;
     setSearchTerm(value);
 
+
+    // this.setState({ isLoading: true, value })
+    // this.setState({ value: value })
+    // let url = urlQueries();
+    // url = url + 'search/?search=' + value
+    // useEffect(() => {
+    //   props.getSearch(url, this.successCallBack, this.errCallBack);
+    // }, [])
+
     if (value.trim() === '') {
+      console.log("emptyyyy");
       setOptions([]);
       setShowOptions(false);
     } else {
-      setOptions([
-        { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] },
-        { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] },
-        { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] }
-      ]); 
-      setShowOptions(true); 
+      setIsLoading(true);
+      // let url = urlQueries();
+      // url = url + 'search/?search=' + value;
+      // console.log(url);
+      getSearch(value, successCallBack, errCallBack);
     }
-  };
+    // setOptions([
+    //   { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] },
+    //   { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] },
+    //   { label: 'Buy and sell section not visible ', tags: ['Buy and sell', 'Login'] }
+    // ]);
+    //   props.options.results.map((query) => (
+    //     <SearchBarOptions label={query.title} tags={query.related_tags} app={query.app} />
+    //   ))
+    //   setShowOptions(true);
+    // }
+    // setTimeout(() => {
+    //   if (this.state.value.length < 1) return this.resetComponent()
+    //   this.setState({
+    //     isLoading: false
+    //   })
+    // }, 300)
+  }
+
+  const successCallBack = (response) => {
+    const data = response.data;
+    setOptions(data);
+    setShowOptions(true);
+    setIsLoading(false);
+  }
+
+  const errCallBack = (error) => {
+    console.error("Error occurred: ", error);
+    setIsLoading(false)
+  }
 
   return (
     <div className={tailwindWrapper("flex flex-col items-start relative md:w-[60%]")}>
@@ -42,24 +101,30 @@ const SearchBar = () => {
       </div>
       {showOptions && (
         <div className={tailwindWrapper("flex flex-col size-full md:size-auto")}>
-          <ul className={tailwindWrapper("absolute bg-white w-full rounded-md shadow-lg -mt-3 z-10 size-full md:size-auto divide-y divide-y-2 divide-[#F5F5F5]")}>
+          <ul className={tailwindWrapper("absolute bg-white w-full rounded-md shadow-lg -mt-3 z-10 size-full md:size-auto divide-y divide-y-2 divide-[#F5F5F5] pt-1")}>
             {options.map((option, index) => (
-              <li key={index} className={tailwindWrapper(`px-4 py-2 cursor-pointer hover:bg-gray-100 z-10 ${themeText[theme]}`)}>
+              <li key={index} className={tailwindWrapper(`px-4 py-2 cursor-pointer hover:bg-gray-100 z-10 ${themeText[theme]} pt-2`)}>
                 <div className={tailwindWrapper("flex")}>
                   <div className={tailwindWrapper("flex flex-col w-full")}>
-                    <div className={tailwindWrapper("text-[#787B8C] font-normal")}>{option.label}</div>
+                    <div className={tailwindWrapper("text-[#787B8C] font-normal")}>{option.title}</div>
                     <div className={tailwindWrapper("flex flex-wrap mt-1")}>
-                      {option.tags.map((tag, tagIndex) => (
+                      <div className={tailwindWrapper("bg-[#E0D7F4] text-[#6435C9] px-3 py-0.5 rounded-full rounded-s-xl rounded-e-xl mr-4 h-5 text-xs font-medium")}>
+                        {option.appName}
+                      </div>
+                      {/* {option.relatedTag.map((tag, tagIndex) => (
                         <div key={tagIndex} className={tailwindWrapper("bg-[#E0D7F4] text-[#6435C9] px-3 py-0.5 rounded-full rounded-s-xl rounded-e-xl mr-4 h-5 text-xs font-medium")}>
                           {tag}
                         </div>
-                      ))}
+                      ))} */}
+                      <div className={tailwindWrapper("bg-[#E0D7F4] text-[#6435C9] px-3 py-0.5 rounded-full rounded-s-xl rounded-e-xl mr-4 h-5 text-xs font-medium")}>
+                        {option.relatedTag}
+                      </div>
                     </div>
                   </div>
-                  <div className={tailwindWrapper("self-center flex")}>
-                    <div className={tailwindWrapper("self-center content-center rounded bg-[#DED0FBA8] w-7 h-7 px-1 py-1")}>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 28 28" strokeWidth={1.5} stroke="#6435C9" className={tailwindWrapper("w-6 h-6")}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                  <div className={tailwindWrapper("self-center justify-center flex rounded bg-[#DED0FBA8] w-7 h-7")}>
+                    <div className={tailwindWrapper("self-center content-center flex")}>
+                      <svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.166992 14V0H7.16699L7.4781 1.64706H11.8337V9.88235H6.38921L6.0781 8.23529H1.72255V14H0.166992Z" fill="#6435C9" />
                       </svg>
                     </div>
                   </div>
@@ -72,12 +137,14 @@ const SearchBar = () => {
                   Report New Issue
                 </div>
                 <div className={tailwindWrapper("flex flex-wrap mt-1")}>
-                  <button className={tailwindWrapper("bg-[#6435C9] text-white px-2 rounded flex")}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className={tailwindWrapper("w-4 h-4 text-[#7B809A]-700 self-center")}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    Add
-                  </button>
+                  <Link to="/helpcentre/issues" className={tailwindWrapper("mt-auto")}>
+                    <button className={tailwindWrapper("bg-[#6435C9] text-white px-2 rounded flex")}>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className={tailwindWrapper("w-4 h-4 text-[#7B809A]-700 self-center")}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                      </svg>
+                      Add
+                    </button>
+                  </Link>
                 </div>
               </div>
             </li>
