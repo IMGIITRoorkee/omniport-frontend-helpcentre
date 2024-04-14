@@ -13,7 +13,8 @@ import {
   urlQueries,
   urlQueryDetails,
   urlComments,
-  urlAllowsPolyjuice
+  urlAllowsPolyjuice,
+  urlQueriesSearch
 } from '../urls'
 
 export const setUser = () => {
@@ -95,8 +96,8 @@ export const getMaintainers = () => {
     axios
       .get(urlGetMaintainers(), {
         params: {
-	  search: ''
-	}
+          search: ''
+        }
       })
       .then(res => {
         dispatch({
@@ -359,3 +360,20 @@ export const changeAllowsPolyjuice = allowsPolyjuice => {
     })
   }
 }
+
+export const getSearch = (value, successCallBack, errCallBack) => {
+  console.log("here", value);
+  return axios.get(urlQueriesSearch(), {
+    params: {
+      search: value,
+    }
+  })
+    .then((response) => {
+      console.log(response);
+      successCallBack(response)
+    })
+    .catch((error) => {
+      errCallBack(error);
+    })
+}
+

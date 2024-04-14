@@ -7,8 +7,17 @@ export function urlAppBase () {
 export function urlMainApp () {
   return '/api/helpcentre/'
 }
+
+export function urlStatic () {
+  return `/static/helpcentre/`
+}
+
 export function urlQueries () {
   return `${urlMainApp()}query/`
+}
+
+export function urlQueriesSearch () {
+  return `${urlQueries()}search/`
 }
 
 export function urlQueryDetails (id) {

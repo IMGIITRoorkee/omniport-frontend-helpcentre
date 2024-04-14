@@ -1,217 +1,129 @@
-import React, { Component, Fragment } from 'react'
-import {
-  Icon,
-  List,
-  Segment,
-  Label,
-  Checkbox, 
-  Popup
-} from 'semantic-ui-react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
 
-import { ifRole, MaintainerView } from 'formula_one'
-import {
-  setActiveIssue,
-  changeStatusActiveIssue,
-  changeAssignees,
-  getMaintainers,
-  setUser,
-  setAllowsPolyjuice,
-  changeAllowsPolyjuice
-} from '../actions'
+import Radio from './radio'
 import AddAssignees from './add-assignees'
+import { ifRole, MaintainerView } from 'formula_one'
+import { CrossIcon, QuestionIcon, ShieldIcon, UserIcon } from './icons'
+import { tailwindWrapper } from "formula_one/src/utils/tailwindWrapper"
+import { setActiveIssue, changeStatusActiveIssue, changeAssignees, getMaintainers, setUser, setAllowsPolyjuice, changeAllowsPolyjuice } from '../actions'
 
-import inline from 'formula_one/src/css/inline.css'
-
-class SideSegment extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
+const AssignedMaintainer = ({assignee, activeIssue, changeAssignees}) => {
+    const handleDelete = (id) => {
+        let data = []
+        if (typeof activeIssue.assignees[0] === 'object') {
+            data = activeIssue.assignees.map((x) => x.id).filter((x) => x !== id)
+        } else {
+            data = activeIssue.assignees.filter((x) => x !== id)
+        }
+        changeAssignees(activeIssue.id, data)
     }
-  }
 
-  componentDidMount () {
-    this.props.SetUser()
-    this.props.GetMaintainers()
-    this.props.SetActiveIssue(this.props.id)
-    this.props.SetAllowsPolyjuice()
-  }
-
-  getAssigneesFromIndex = a => {
-    let c = []
-    this.props.maintainers.map(maintainer => {
-      a.map(x => {
-        maintainer.id == x ? c.push(maintainer) : void 0
-      })
-    })
-    return c
-  }
-
-  handleDelete = id => {
-    const { activeIssue } = this.props
-    let data = []
-    if (typeof activeIssue.assignees[0] === 'object') {
-      data = activeIssue.assignees
-        .map(x => x.id)
-        .filter(x => {
-          return x !== id
-        })
-    } else {
-      data = activeIssue.assignees.filter(x => {
-        return x !== id
-      })
-    }
-    this.props.ChangeAssignees(this.props.id, data)
-  }
-  handleContextRef = contextRef => this.setState({ contextRef })
-
-  handleChangeAllowPolyjuice = (e, {checked}) => {
-    this.props.ChangeAllowsPolyjuice(checked)
-  }
-
-  render () {
-    const { activeIssue, whoAmI, maintainers, allowsPolyjuice } = this.props
-    return (
-      <Segment color={activeIssue.isClosed === true ? 'green' : 'red'}>
-        <List divided relaxed>
-          <List.Item>
-            <List.Content>
-              <List.Header>Issue opened on</List.Header>
-              {moment(activeIssue.datetimeCreated).format('dddd, MMMM Do YYYY')}
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Content>
-              <List.Header>Issue opened at</List.Header>
-              {moment(activeIssue.datetimeCreated).format('h:mm a')}
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Content>
-              <List.Header>Issue opened by</List.Header>
-              <Label
-                styleName='inline.margin-top-half inline.margin-bottom-half'
-                image
-              >
-                {Boolean(activeIssue.uploader) &&
-                activeIssue.uploader.displayPicture ? (
-                  <img src={activeIssue.uploader.displayPicture} />
-                  ) : (
-                    <Icon name='user' />
-                  )}
-                {Boolean(activeIssue.uploader) && activeIssue.uploader.fullName}
-              </Label>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Content>
-              <List.Header>App</List.Header>
-              {activeIssue.appName}
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Content>
-              <List.Header>Allow maintianer access</List.Header>
-              <Checkbox
-                styleName='inline.margin-top-half inline.margin-bottom-half'
-                toggle
-                checked={
-                  allowsPolyjuice.isLoaded &&
-                  allowsPolyjuice.data.polyjuiceAllowed
-                }
-                onChange={this.handleChangeAllowPolyjuice}
-                label='Allow maintainers to access your account'
-              />
-              <Popup 
-                content='This will give one-time access to the maintainers to 
-                log in to your account. You can revoke the permission once 
-                given. Only allow this if you have full confidence in the 
-                maintainer asking you for permission.'
-                trigger={
-                <Icon name='help circle' style={{marginLeft: '0.25em'}} />
-                }
-              />
-            </List.Content>
-          </List.Item>
-          {activeIssue.assignees ? (
-            ifRole(whoAmI.roles, 'Maintainer') === 'IS_ACTIVE' ||
-            activeIssue.assignees.length !== 0 ? (
-              <List.Item>
-                  <List.Content>
-                  <List.Header styleName='inline.margin-bottom-half'>
-                    Assigned To
-                    </List.Header>
-                  {activeIssue.assignees
-                      ? typeof activeIssue.assignees[0] === 'object'
-                        ? activeIssue.assignees.map(assignee => {
-                          return (
-                            <Label key={assignee.id} image>
-                              {Boolean(assignee.person) &&
-                              assignee.person.displayPicture ? (
-                                <img src={assignee.person.displayPicture} />
-                                ) : (
-                                  <Icon name='shield' />
-                                )}
-                              {Boolean(assignee.person) &&
-                                assignee.person.fullName}
-                              <MaintainerView which='helpcentre'>
-                                <Icon
-                                  name='delete'
-                                  onClick={() => this.handleDelete(assignee.id)}
-                                />
-                              </MaintainerView>
-                            </Label>
-                          )
-                        })
-                        : this.getAssigneesFromIndex(activeIssue.assignees).map(
-                          assignee => {
-                            return (
-                              <Label key={assignee.id} image>
-                                {Boolean(assignee.person) &&
-                                assignee.person.displayPicture ? (
-                                  <img src={assignee.person.displayPicture} />
-                                  ) : (
-                                    <Icon name='shield' />
-                                  )}
-                                {Boolean(assignee.person) &&
-                                  assignee.person.fullName}
-                                <MaintainerView which='helpcentre'>
-                                  <Icon
-                                    name='delete'
-                                    onClick={() =>
-                                      this.handleDelete(assignee.id)
-                                    }
-                                  />
-                                </MaintainerView>
-                              </Label>
-                            )
-                          }
-                        )
-                      : false}
-                  <MaintainerView which='helpcentre'>
-                      <Fragment>
-                      <List.Header styleName='inline.margin-top-half'>
-                        Change
-                        </List.Header>
-                      <AddAssignees />
-                    </Fragment>
-                    </MaintainerView>
-                </List.Content>
-                </List.Item>
-              ) : (
-                false
-              )
-          ) : (
-            false
-          )}
-        </List>
-      </Segment>
-    )
-  }
+    return (<div key={assignee.id} className={tailwindWrapper("py-1 inline-block flex items-stretch items-center mr-2")}>
+        {Boolean(assignee.person) && assignee.person.displayPicture 
+            ? <img src={assignee.person.displayPicture} alt="Assignee" className={tailwindWrapper("w-8 h-8 rounded-l-md")} />
+            :   (<div className={tailwindWrapper("inline-block w-8 h-8 bg-gray-300 pl-2 pr-8 pt-0.5 rounded-l-md")}>
+                    <ShieldIcon color={"text-black"}/>
+                </div>)}
+        <div className={tailwindWrapper("bg-gray-200 inline-block flex gap-2 items-center px-2 py-1 rounded-r-md")}>
+            <span className={tailwindWrapper("font-md text-md")}>{Boolean(assignee.person) && assignee.person.fullName}</span>
+            <MaintainerView which="helpcentre">
+                <span onClick={() => handleDelete(assignee.id)} className={tailwindWrapper("cursor-pointer")}><CrossIcon dimension={"w-4 h-4"} /></span>
+            </MaintainerView>
+        </div>
+    </div>)
 }
 
-function mapStateToProps (state) {
+const SideSegment = ({ SetUser, GetMaintainers, SetActiveIssue, ChangeAssignees, activeIssue, whoAmI, maintainers, allowsPolyjuice, ChangeAllowsPolyjuice, SetAllowsPolyjuice, id}) => {
+    const [contextRef, setContextRef] = useState(null)
+    const [checked, setChecked] = useState(false)
+
+    useEffect(() => {
+        SetUser()
+        GetMaintainers()
+        SetActiveIssue(id)
+        SetAllowsPolyjuice()
+    }, [SetUser, GetMaintainers, SetActiveIssue, SetAllowsPolyjuice])
+
+    useEffect(() => {
+        setChecked(allowsPolyjuice.isLoaded && allowsPolyjuice.data.polyjuiceAllowed)
+    }, [allowsPolyjuice.isLoaded, allowsPolyjuice.data.polyjuiceAllowed])
+
+    const getAssigneesFromIndex = (a) => {
+        return maintainers.filter((maintainer) => a.includes(maintainer.id))
+    }
+
+    const handleChangeAllowPolyjuice = (checked) => {
+        setChecked(checked)
+        ChangeAllowsPolyjuice(checked)
+    }
+
+    return (
+        <div className={tailwindWrapper(`border-t-2 rounded-md ${activeIssue.isClosed === true ? 'border-green-500' : 'border-red-500'}`)}>
+            <div className={tailwindWrapper("px-4 pt-4 pb-3 border-r border-l border-b rounded-l-md rounded-r-md")}>
+                <ul className={tailwindWrapper("divide-y divide-gray-200")}>
+                    <li className={tailwindWrapper("pb-2")}>
+                        <span className={tailwindWrapper("font-semibold")}>Issue opened on</span><br />
+                        {moment(activeIssue.datetimeCreated).format('dddd, MMMM Do YYYY')}
+                    </li>
+                    <li className={tailwindWrapper("py-2")}>
+                        <span className={tailwindWrapper("font-semibold")}>Issue opened at</span><br />
+                        {moment(activeIssue.datetimeCreated).format('h:mm a')}
+                    </li>
+                    <li className={tailwindWrapper("py-2")}>
+                        <span className={tailwindWrapper("font-semibold")}>Issue opened by</span>
+                        <div className={tailwindWrapper('flex items-center items-stretch')}>
+                            {Boolean(activeIssue.uploader) && activeIssue.uploader.displayPicture 
+                            ?   (<img src={activeIssue.uploader.displayPicture} alt="Uploader" className={tailwindWrapper('w-8 h-8 rounded-l-md')}/>) 
+                            :   (<span className={tailwindWrapper("bg-gray-300 px-2 rounded-l-md")}><UserIcon /></span>)}
+                            <span className={tailwindWrapper("bg-gray-100 text-sm rounded-r-md py-1.5 px-2 font-semibold text-gray-500")}>{Boolean(activeIssue.uploader) && activeIssue.uploader.fullName}</span>
+                        </div>
+                    </li>
+                    <li className={tailwindWrapper("py-2")}>
+                        <span className={tailwindWrapper("font-semibold")}>App</span><br />{activeIssue.appName}
+                    </li>
+                    <li className={tailwindWrapper("py-2")}>
+                        <span className={tailwindWrapper("font-semibold")}>Allow maintainer access</span>
+                        <div>
+                            <label className={tailwindWrapper("flex items-center cursor-pointer")}>
+                                <Radio checked={checked} handleClick={handleChangeAllowPolyjuice}/>
+                                <span className={tailwindWrapper("ml-2 text-sm")}>
+                                    Allow maintainers to access your account
+                                </span>
+                            </label>
+                            <div className={tailwindWrapper("ml-1 group relative inline-block cursor-pointer")}>
+                                <QuestionIcon />
+                                <div className={tailwindWrapper("z-50 w-80 invisible border group-hover:visible opacity-0 group-hover:opacity-100 transition bg-gray-300 absolute text-black-500 text-sm p-2 rounded-md mt-2 bg-[#fff]")}>
+                                    This will give one-time access to the maintainers to log in to your account. You can revoke the permission once given. Only allow this if you have full confidence in the maintainer asking you for permission.
+                                </div>    
+                            </div>
+                        </div>
+                    </li>
+                    {activeIssue.assignees 
+                    ?   ((ifRole(whoAmI.roles, 'Maintainer') === 'IS_ACTIVE' && activeIssue.assignees.length !== 0) 
+                        && (<li className={tailwindWrapper("py-2")}>
+                                <span className={tailwindWrapper("font-semibold")}>Assigned To</span>
+                                <div className={tailwindWrapper("py-1 flex justify-normal flex-wrap")}>
+                                    {activeIssue.assignees
+                                        ? typeof activeIssue.assignees[0] === 'object'
+                                            ? activeIssue.assignees.map((assignee) => <AssignedMaintainer assignee={assignee} activeIssue={activeIssue} changeAssignees={ChangeAssignees} />)
+                                            : getAssigneesFromIndex(activeIssue.assignees).map((assignee) => <AssignedMaintainer assignee={assignee} activeIssue={activeIssue} changeAssignees={ChangeAssignees} />)
+                                        : null}
+                                </div>
+                    <MaintainerView which="helpcentre">
+                        <div className="">
+                            <span className={tailwindWrapper("font-semibold")}>Change</span>
+                            <AddAssignees />
+                        </div>
+                    </MaintainerView>
+                        </li>)) 
+                    : null}
+                </ul>
+            </div>
+        </div>)}
+
+const mapStateToProps = (state) => {
   return {
     maintainers: state.maintainers,
     whoAmI: state.whoAmI,
@@ -220,7 +132,7 @@ function mapStateToProps (state) {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     SetUser: () => {
       dispatch(setUser())
@@ -246,7 +158,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SideSegment)
+export default connect(mapStateToProps, mapDispatchToProps)(SideSegment)

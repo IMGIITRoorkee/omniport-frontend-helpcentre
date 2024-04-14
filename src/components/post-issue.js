@@ -1,313 +1,189 @@
-import React, { Component } from 'react'
-import {
-  Button,
-  Form,
-  TextArea,
-  Dropdown,
-  Segment,
-  Image,
-  Dimmer,
-  Card,
-  Icon,
-  Header,
-  Label,
-  Message
-} from 'semantic-ui-react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 
 import { getTheme } from 'formula_one'
+import Dropdown from './dropdown'
 import { addIssue, setAppList } from '../actions'
 
-import inline from 'formula_one/src/css/inline.css'
-import main from '../css/issue-list.css'
+import { tailwindWrapper } from "formula_one/src/utils/tailwindWrapper"
+import { urlStatic } from '../urls'
+import { themeBg, themeBorder, themeText } from '../constants/theme'
+import { CrossIcon, OtherApp, SubmitIcon, UploadIcon } from './icons'
 
-class AddQuery extends Component {
-  constructor (props) {
-    super(props)
-    const url = new URLSearchParams(props.history.location.search)
-    console.log(url.get('app') || '')
-    this.state = {
-      subject: '',
-      text: '',
-      app: url.get('app') || null,
-      success: false,
-      error: false,
-      message: ''
-    }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
-  componentDidMount () {
-    if (!this.props.appList.isLoaded) {
-      this.props.SetAppList()
-    }
-  }
-  handleChange (e) {
-    const name = e.target.name
-    this.setState({
-      [name]: e.target.value
-    })
-  }
-
-  fileChange = e => {
-    this.setState({
-      [e.target.name]: e.target.files[0],
-      fileSrc: e.target.files[0]
-        ? URL.createObjectURL(e.target.files[0])
-        : null
-    })
-  }
-  removeImage = () => {
-    this.setState({
-      uploadedFile: '',
-      active: 0,
-      fileSrc: ''
-    })
-  }
-  handleShow = () => this.setState({ active: true })
-  handleHide = () => this.setState({ active: false })
-  handleDropdownChange = (e, { name, value }) =>
-    this.setState({ [name]: value })
-  handleSubmit () {
-    const { subject, text, app, uploadedFile } = this.state
-    const url = new URLSearchParams(this.props.history.location.search)
-    if (this.state.text && this.state.app) {
-      var formData = new FormData()
-      formData.append('title', subject)
-      formData.append('app_name', app)
-      formData.append('query', text)
-      uploadedFile ? formData.append('uploaded_file', uploadedFile) : void 0
-      this.props.AddIssue(
-        formData,
-        this.props.paginationIndex['index'],
-        this.props.paginationIndex['status'],
-        this.successCallBack,
-        this.errCallback
-      )
-      this.setState({
-        text: '',
-        subject: '',
-        app: url.get('app') || null,
-        file: {},
-        fileSrc: ''
-      })
-    }
-  }
-  successCallBack = res => {
-    this.setState({
-      success: true,
-      error: false,
-      message: res.statusText
-    })
-  }
-  errCallBack = err => {
-    this.setState({
-      error: true,
-      success: false,
-      message: err.response.data
-    })
-  }
-
-  render () {
-    const { active, text, app, fileSrc, subject, uploadedFile } = this.state
-    const { appList } = this.props
-    const content = (
-      <div>
-        <Button
-          circular
-          basic
-          color='red'
-          icon='close'
-          onClick={this.removeImage}
-        />
-      </div>
-    )
+const Label = ({label, children, hasError}) => {
     return (
-      <React.Fragment>
-        <Segment.Group>
-          <Segment textAlign='left'>
-            <Header as={'h3'}>How can we help you?</Header>
-          </Segment>
-          <Segment>
-            {this.state.success && (
-              <Message success={this.state.success} icon>
-                <Icon name='check' />
-                <Message.Content>
-                  <Message.Header>Success</Message.Header>
-                  Your query has been submitted.
-                </Message.Content>
-              </Message>
-            )}
-            {this.state.error && (
-              <Message negative={this.state.error}>
-                <Icon name='close' />
-                <Message.Header>Error</Message.Header>
-                <Message.List>
-                  {Object.keys(this.state.message).map(cat => {
-                    this.state.message[cat].map(item => {
-                      return <Message.Item>{item}</Message.Item>
-                    })
-                  })}
-                </Message.List>
-              </Message>
-            )}
-            <Form encType='multiple/form-data'>
-              <Form.Field>
-                <label>App</label>
-                <Dropdown
-                  selectOnNavigation={false}
-                  selection
-                  onChange={this.handleDropdownChange}
-                  name='app'
-                  placeholder='Select an App'
-                  options={[
-                    ...appList.data.map((app, index) => {
-                      const option = {
-                        key: index,
-                        value: app.nomenclature.verboseName,
-                        text: app.nomenclature.verboseName
-                      }
-                      if (app.assets && app.assets.favicon) {
-                        option['image'] = {
-                          src: `/static/${app.baseUrls.static}${
-                            app.assets.favicon
-                          }`,
-                          style: {
-                            height: '16px',
-                            width: '16px',
-                            verticalAlign: 'middle'
-                          }
-                        }
-                      } else {
-                        option['icon'] = 'cube'
-                      }
-                      return option
-                    }),
-                    { value: 'Other', text: 'Other', icon: 'cube' }
-                  ]}
-                  value={app}
-                  error={
-                    this.state.error &&
-                    Object.key(this.state.message).find(x => {
-                      return x === 'app'
-                    })
-                  }
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>Subject</label>
-                <Form.Input
-                  autoComplete='off'
-                  type='input'
-                  value={subject}
-                  onChange={this.handleChange}
-                  name='subject'
-                  placeholder='Subject'
-                  error={
-                    this.state.error &&
-                    Object.key(this.state.message).find(x => {
-                      return x === 'subject'
-                    })
-                  }
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>Add query</label>
-                <TextArea
-                  value={text}
-                  onChange={this.handleChange}
-                  name='text'
-                  rows='3'
-                  autoHeight
-                  placeholder='Add Query'
-                  error={
-                    this.state.error &&
-                    Object.key(this.state.message).find(x => {
-                      return x === 'text'
-                    })
-                  }
-                />
-              </Form.Field>
-              <p>
-                To attach more than one file, upload a <i>.zip</i> archive.
-              </p>
-              <label htmlFor='uploadFile'>
-                <Button
-                  as='span'
-                  icon='upload'
-                  content='Upload'
-                  basic
-                  color={getTheme()}
-                  styleName='inline.margin-bottom-1em'
-                />
-              </label>
-              <input
-                type='file'
-                onChange={this.fileChange}
-                name={'uploadedFile'}
-                id='uploadFile'
-                styleName='inline.display-none'
-              />
-              {fileSrc ? (
-                uploadedFile['type'].includes('image') ? (
-                  <Card>
-                    <Dimmer.Dimmable
-                      blurring
-                      as={Image}
-                      src={fileSrc}
-                      size='medium'
-                      dimmer={{ active, content }}
-                      onMouseEnter={this.handleShow}
-                      onMouseLeave={this.handleHide}
-                    />
-                  </Card>
-                ) : (
-                  <div>
-                    <Label>
-                      <a href={fileSrc} target='blank'>
-                        {uploadedFile['name']}
-                      </a>{' '}
-                      <span
-                        onClick={this.removeImage}
-                        styleName='inline.cursor-pointer'
-                      >
-                        <Icon name='close' />
-                      </span>
-                    </Label>
-                  </div>
-                )
-              ) : (
-                false
-              )}
-              <br />
-              <div styleName='main.button-container'>
-                <Button
-                  type='submit'
-                  onClick={this.handleSubmit}
-                  position='right'
-                  primary
-                  icon='send'
-                  content='Submit'
-                  disabled={!text || !app || !subject}
-                />
-              </div>
-            </Form>
-          </Segment>
-        </Segment.Group>
-      </React.Fragment>
-    )
-  }
-}
+        <div className={tailwindWrapper("py-2")}>
+            <label className={tailwindWrapper("block text-gray-700 text-sm font-bold mb-2")}>{label}</label>
+            {children}
+            {hasError && <p className={tailwindWrapper("text-red-500 text-xs italic pb-2 pl-1")}>{`${label} is required.`}</p>}
+        </div>
+  )}
 
-function mapStateToProps (state) {
+const AddQuery = ({ history, appList, AddIssue, SetAppList, paginationIndex}) => {
+    const [open, setOpen] = useState(false)
+    const [subject, setSubject] = useState('')
+    const [query, setQuery] = useState('')
+    const [app, setApp] = useState(null)
+    const [uploadedFile, setUploadedFile] = useState(null)
+    const [fileSrc, setFileSrc] = useState('')
+    const [success, setSuccess] = useState(false)
+    const [error, setError] = useState(false)
+        
+    const theme = getTheme()
+    const fileInputRef = useRef(null)
+
+    useEffect(() => {
+        const url = new URLSearchParams(history.location.search)
+        setApp(url.get('app') || null)
+
+        if (!appList.isLoaded)
+            SetAppList()
+    }, [])
+    
+    const handleUpload = () => fileInputRef.current.click()
+    const handleAppChange = (newApp) => setApp(newApp)
+    const fileChange = (e) =>
+    {
+        setUploadedFile(e.target.files[0])
+        setFileSrc(e.target.files[0] ? URL.createObjectURL(e.target.files[0]) : '')
+    }
+    const removeImage = () => {
+        setUploadedFile(null)
+        setFileSrc('')
+    }
+
+    const handleSubmit = () => {
+        const url = new URLSearchParams(history.location.search)
+
+        if (query && app && subject)
+        {
+            const formData = new FormData()
+            formData.append('title', subject)
+            formData.append('app_name', app)
+            formData.append('query', query)
+            uploadedFile ? formData.append('uploaded_file', uploadedFile) : null
+
+            AddIssue(
+                formData,
+                paginationIndex.index,
+                paginationIndex.status,
+                successCallBack,
+                errCallBack
+            )
+
+            setSubject('')
+            setQuery('')
+            setApp(url.get('app') || null)
+            setUploadedFile(null)
+            setFileSrc('')
+        }
+    }
+
+    const successCallBack = (res) => {
+        setSuccess(true)
+        setError(false)
+    }
+
+    const errCallBack = (err) => {
+        setSuccess(false)
+        setError(true)
+    }
+
+    const options = appList.data.map((app, index) => {
+        const appData = {
+            key: index + 1,
+            value: app.nomenclature.verboseName,
+            text: app.nomenclature.verboseName,
+        }
+        if (app.assets && app.assets.favicon){
+            appData['content'] = (<img src={`/static/${app.baseUrls.static}${app.assets.favicon}`} className={tailwindWrapper("h-6 w-6 mr-2.5")} />)
+        }
+        return appData
+    })
+    options.push({ key: 0, value: 'Other', text: 'Other' })
+  
+    return (
+        <div className={tailwindWrapper("px-4 md:w-3/4 w-full border rounded border-[#DEDEDF] mt-8 md:mt-14 mb-4 pt-4")}> 
+            {success && (
+                <div className={tailwindWrapper("bg-green-100 border border-green-400 text-green-700 px-4 py-3 mb-1 rounded relative")} role="alert">
+                    <strong className={tailwindWrapper("font-bold")}>Success!</strong>
+                    <span className={tailwindWrapper("block sm:inline")}> Your query has been submitted.</span>
+                </div>
+            )}
+            {error && (
+                <div className={tailwindWrapper("bg-red-100 border border-red-400 text-red-700 px-4 py-3 mb-1 rounded relative")} role="alert">
+                    <strong className={tailwindWrapper("font-bold")}>Error!</strong>
+                    <span className={tailwindWrapper("text-red-700 font-semibold")}> An error occurred. Please try again.</span>   
+                </div>
+            )}
+            <div className={tailwindWrapper("rounded-md")}>
+                <form>
+                    <div className={tailwindWrapper("form-group")}>
+                        <Label label='App' hasError={false}>
+                        <Dropdown options={options} selectedOption={app} setOption={handleAppChange} open={open} setOpen={setOpen} width={"w-full"} otherContent={OtherApp} placeholder={"Select an App"}/>
+                        </Label>
+                        <Label label='Subject' hasError={false}>
+                            <input type="text" value={subject} className={tailwindWrapper("shadow appearance-none border rounded w-full py-2 px-3 placeholder-[#BFBFBFDE] leading-tight focus:outline-none focus:shadow-outline")} placeholder="Subject" onChange={(e) => setSubject(e.target.value)}/>
+                        </Label>
+                        <Label label='Add query' hasError={false}>
+                            <textarea rows={3} type="text" className={tailwindWrapper("shadow appearance-none border rounded w-full py-2 px-3 placeholder-[#BFBFBFDE] leading-tight focus:outline-none focus:shadow-outline")} placeholder="Add Query" value={query} onChange={(e) => setQuery(e.target.value)}/>
+                        </Label>
+                    </div>
+                    <div className={tailwindWrapper("flex justfiy-content items-center text-sm gap-4")}>
+                        <img src={`${urlStatic()}link.svg`} alt="Link" className={tailwindWrapper("w-8 h-8")} />
+                        <span>Attach link of your query page.</span>
+                    </div>
+                    <button type="button" className={tailwindWrapper(`flex justify-content gap-1 border border-2 my-5 rounded-md ${themeText[theme]} ${themeBorder[theme]} inline-block py-2 pl-5 pr-6 rounded focus:outline-none focus:shadow-outline`)}
+                    onClick={handleUpload}>
+                        <UploadIcon />
+                        <span>Upload</span>
+                    </button>
+                    <input hidden type='file' onChange={fileChange} name={'uploadedFile'} id='uploadFile' ref={fileInputRef} />
+                    {fileSrc && (
+                        <div className={tailwindWrapper("my-4")}>
+                            {uploadedFile.type.includes('image') ? (
+                                <div className={tailwindWrapper("relative group sm:w-1/2 lg:w-1/3 lg:h-1/3 w-full h-full")}>
+                                    <img
+                                        src={fileSrc}
+                                        alt="Uploaded Image"
+                                        className={tailwindWrapper("rounded-lg cursor-pointer")}
+                                    />
+                                    <div className={tailwindWrapper("absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 flex items-center justify-center")}>
+                                        <button className={tailwindWrapper("text-red")} onClick={removeImage}>
+                                            <CrossIcon dimension={"w-8 h-8"}/>
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className={tailwindWrapper("flex justify-content items-center gap-2 py-2")}>
+                                    <span className="mr-2">
+                                        <a href={fileSrc} target="_blank" className={tailwindWrapper("text-blue-500 hover:underline")}>{uploadedFile.name}</a>
+                                    </span>
+                                    <button className={tailwindWrapper("text-red-500")} onClick={removeImage}>
+                                        <CrossIcon dimension={"w-6 h-6"}/>
+                                    </button>
+                                </div>
+                            )}
+                    </div>
+                )}
+                <button type="button" className={tailwindWrapper(`flex justify-content gap-1  my-5 rounded-md ${themeText[theme]} ${themeBg[theme]} text-md text-white font-bold inline-block py-2 pl-5 pr-6 rounded-md focus:outline-none focus:shadow-outline mr-0 ml-auto ${(!query || !app || !subject) && "cursor-not-allowed opacity-50"}`)} disabled={!query || !app || !subject} 
+                onClick={handleSubmit}>
+                    <SubmitIcon />
+                    <span>Submit</span>
+                </button>
+                </form>
+            </div>
+        </div>
+    )}
+  
+const mapStateToProps = (state) => {
   return {
     paginationIndex: state.paginationIndex,
-    whoAmI: state.whoAmI,
     appList: state.appList
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     AddIssue: (data, index, status, successCallBack, errCallback) => {
       dispatch(addIssue(data, index, status, successCallBack, errCallback))
@@ -318,7 +194,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AddQuery)
+export default connect(mapStateToProps, mapDispatchToProps)(AddQuery)
