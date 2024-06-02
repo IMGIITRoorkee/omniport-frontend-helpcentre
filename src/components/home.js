@@ -18,9 +18,9 @@ const Home = ({ appList, SetAppList }) => {
   const [selectedApp, setApp] = useState(null);
   const [open, setOpen] = useState(false);
   const [openDescription,setDescription]=useState(false);
+  const [currentItem, setCurrentItem] = useState(null);
   const theme = getTheme();
-  console.log(tailwindWrapper);
-  console.log("KFJDKF\n\n\n\n");
+  
   const options = appList.data.map((app, index) => {
     const appData = {
       key: index + 1,
@@ -39,10 +39,13 @@ const Home = ({ appList, SetAppList }) => {
   });
   options.push({ key: 0, value: "Other", text: "Other" });
 
-  const toggleDescription=({description})=>{
-    setDescription(!description);
-  }
-
+  const toggleDescription = (item) => {
+    setCurrentItem(item);
+    // if (item && item.app) {
+    //   setApp(item.app);
+    // }
+    setDescription(!openDescription);
+  };
 
   useEffect(() => {
     if (!appList.isLoaded) SetAppList();
@@ -56,7 +59,7 @@ const Home = ({ appList, SetAppList }) => {
               "flex max-[400px]:flex-col gap-3 justify-between"
             )}
           >
-            <SearchBar />
+            <SearchBar toggleDescription={toggleDescription} />
             <Link
               to="/helpcentre/issues"
               className={tailwindWrapper("mt-auto")}
@@ -100,7 +103,7 @@ const Home = ({ appList, SetAppList }) => {
           </div>
         </div>
       {openDescription && (
-        <AddDescriptionBox toggleDescription={setDescription} />
+        <AddDescriptionBox toggleDescription={setDescription} item={currentItem} app={selectedApp}/>
       )}
     </div>
   );

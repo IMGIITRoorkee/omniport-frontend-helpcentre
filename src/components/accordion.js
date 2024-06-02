@@ -10,7 +10,7 @@ const AccordionItem = ({item, isOpen, toggleAccordion, toggleDescription}) => {
     const ref = useRef(null)
 
     const handleReport=()=>{
-        toggleDescription(false);
+        toggleDescription(item);
     }
 
     const [contentHeight, setContentHeight] = useState(0)
