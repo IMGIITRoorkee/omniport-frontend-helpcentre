@@ -5,6 +5,7 @@ import { themeText } from '../constants/theme'
 import { urlQueries } from '../urls';
 import { getSearch } from '../actions';
 import { Link } from 'react-router-dom';
+import { ReportIssueFlag } from './icons';
 
 
 const SearchBar = ({toggleDescription}) => {
@@ -78,17 +79,17 @@ const SearchBar = ({toggleDescription}) => {
                       <div className={tailwindWrapper("bg-[#E0D7F4] text-[#6435C9] px-3 py-0.5 rounded-full rounded-s-xl rounded-e-xl mr-4 h-5 text-xs font-medium")}>
                         {option.appName}
                       </div>
-                      <div className={tailwindWrapper("bg-[#E0D7F4] text-[#6435C9] px-3 py-0.5 rounded-full rounded-s-xl rounded-e-xl mr-4 h-5 text-xs font-medium")}>
-                        {option.relatedTag}
-                      </div>
+                      {option.relatedTag && (
+                        <div className={tailwindWrapper("bg-[#E0D7F4] text-[#6435C9] px-3 py-0.5 rounded-full rounded-s-xl rounded-e-xl mr-4 h-5 text-xs font-medium")}>
+                          {option.relatedTag}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className={tailwindWrapper("self-center justify-center flex rounded bg-[#DED0FBA8] w-7 h-7")}>
                     <div className={tailwindWrapper("self-center content-center flex")}>
                       <button onClick={() => handleReport(option)}>
-                      <svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0.166992 14V0H7.16699L7.4781 1.64706H11.8337V9.88235H6.38921L6.0781 8.23529H1.72255V14H0.166992Z" fill="#6435C9" />
-                      </svg>
+                      <ReportIssueFlag/>
                       </button>
                     </div>
                   </div>

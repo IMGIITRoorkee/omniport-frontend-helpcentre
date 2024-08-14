@@ -10,25 +10,29 @@ import { urlStatic } from '../urls'
 import { themeBg, themeBorder, themeText } from '../constants/theme'
 import { CrossIcon, OtherApp, SubmitIcon, UploadIcon } from './icons'
 
-const Label = ({label, children, hasError}) => {
+const Label = ({ label, children, hasError }) => {
     return (
         <div className={tailwindWrapper("py-2")}>
             <label className={tailwindWrapper("block text-gray-700 text-sm font-bold mb-2")}>{label}</label>
             {children}
             {hasError && <p className={tailwindWrapper("text-red-500 text-xs italic pb-2 pl-1")}>{`${label} is required.`}</p>}
         </div>
-  )}
+    )
+}
 
-const AddQuery = ({ history, appList, AddIssue, SetAppList, paginationIndex}) => {
+const AddQuery = ({ history, appList, AddIssue, SetAppList, paginationIndex }) => {
     const [open, setOpen] = useState(false)
     const [subject, setSubject] = useState('')
+    const [relatedTag, setRelatedTag] = useState('')
     const [query, setQuery] = useState('')
     const [app, setApp] = useState(null)
+    const [link, setLink] = useState('')
+    const [linkInput, setLinkInput] = useState(false)
     const [uploadedFile, setUploadedFile] = useState(null)
     const [fileSrc, setFileSrc] = useState('')
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState(false)
-        
+
     const theme = getTheme()
     const fileInputRef = useRef(null)
 
@@ -39,11 +43,12 @@ const AddQuery = ({ history, appList, AddIssue, SetAppList, paginationIndex}) =>
         if (!appList.isLoaded)
             SetAppList()
     }, [])
-    
+
+    const handleLink = () => setLinkInput(!linkInput)
+
     const handleUpload = () => fileInputRef.current.click()
     const handleAppChange = (newApp) => setApp(newApp)
-    const fileChange = (e) =>
-    {
+    const fileChange = (e) => {
         setUploadedFile(e.target.files[0])
         setFileSrc(e.target.files[0] ? URL.createObjectURL(e.target.files[0]) : '')
     }
@@ -55,12 +60,13 @@ const AddQuery = ({ history, appList, AddIssue, SetAppList, paginationIndex}) =>
     const handleSubmit = () => {
         const url = new URLSearchParams(history.location.search)
 
-        if (query && app && subject)
-        {
+        if (query && app && subject) {
             const formData = new FormData()
             formData.append('title', subject)
             formData.append('app_name', app)
             formData.append('query', query)
+            formData.append('link', link)
+            formData.append('related_tag', relatedTag)
             uploadedFile ? formData.append('uploaded_file', uploadedFile) : null
 
             AddIssue(
@@ -95,15 +101,15 @@ const AddQuery = ({ history, appList, AddIssue, SetAppList, paginationIndex}) =>
             value: app.nomenclature.verboseName,
             text: app.nomenclature.verboseName,
         }
-        if (app.assets && app.assets.favicon){
+        if (app.assets && app.assets.favicon) {
             appData['content'] = (<img src={`/static/${app.baseUrls.static}${app.assets.favicon}`} className={tailwindWrapper("h-6 w-6 mr-2.5")} />)
         }
         return appData
     })
     options.push({ key: 0, value: 'Other', text: 'Other' })
-  
+
     return (
-        <div className={tailwindWrapper("px-4 md:w-3/4 w-full border rounded border-[#DEDEDF] mt-8 md:mt-14 mb-4 pt-4")}> 
+        <div className={tailwindWrapper("px-4 md:w-3/4 w-full border rounded border-[#DEDEDF] mt-8 md:mt-14 mb-4 pt-4")}>
             {success && (
                 <div className={tailwindWrapper("bg-green-100 border border-green-400 text-green-700 px-4 py-3 mb-1 rounded relative")} role="alert">
                     <strong className={tailwindWrapper("font-bold")}>Success!</strong>
@@ -113,28 +119,40 @@ const AddQuery = ({ history, appList, AddIssue, SetAppList, paginationIndex}) =>
             {error && (
                 <div className={tailwindWrapper("bg-red-100 border border-red-400 text-red-700 px-4 py-3 mb-1 rounded relative")} role="alert">
                     <strong className={tailwindWrapper("font-bold")}>Error!</strong>
-                    <span className={tailwindWrapper("text-red-700 font-semibold")}> An error occurred. Please try again.</span>   
+                    <span className={tailwindWrapper("text-red-700 font-semibold")}> An error occurred. Please try again.</span>
                 </div>
             )}
             <div className={tailwindWrapper("rounded-md")}>
                 <form>
                     <div className={tailwindWrapper("form-group")}>
                         <Label label='App' hasError={false}>
-                        <Dropdown options={options} selectedOption={app} setOption={handleAppChange} open={open} setOpen={setOpen} width={"w-full"} otherContent={OtherApp} placeholder={"Select an App"}/>
+                            <Dropdown options={options} selectedOption={app} setOption={handleAppChange} open={open} setOpen={setOpen} width={"w-full"} otherContent={OtherApp} placeholder={"Select an App"} />
                         </Label>
                         <Label label='Subject' hasError={false}>
-                            <input type="text" value={subject} className={tailwindWrapper("shadow appearance-none border rounded w-full py-2 px-3 placeholder-[#BFBFBFDE] leading-tight focus:outline-none focus:shadow-outline")} placeholder="Subject" onChange={(e) => setSubject(e.target.value)}/>
+                            <input type="text" value={subject} className={tailwindWrapper("shadow appearance-none border rounded w-full py-2 px-3 placeholder-[#BFBFBFDE] leading-tight focus:outline-none focus:shadow-outline")} placeholder="Subject" onChange={(e) => setSubject(e.target.value)} />
+                        </Label>
+                        <Label label='Related Tag' hasError={false}>
+                            <input type="text" value={relatedTag} className={tailwindWrapper("shadow appearance-none border rounded w-full py-2 px-3 placeholder-[#BFBFBFDE] leading-tight focus:outline-none focus:shadow-outline")} placeholder="Related Tag" onChange={(e) => setRelatedTag(e.target.value)} />
                         </Label>
                         <Label label='Add query' hasError={false}>
-                            <textarea rows={3} type="text" className={tailwindWrapper("shadow appearance-none border rounded w-full py-2 px-3 placeholder-[#BFBFBFDE] leading-tight focus:outline-none focus:shadow-outline")} placeholder="Add Query" value={query} onChange={(e) => setQuery(e.target.value)}/>
+                            <textarea rows={3} type="text" className={tailwindWrapper("shadow appearance-none border rounded w-full py-2 px-3 placeholder-[#BFBFBFDE] leading-tight focus:outline-none focus:shadow-outline")} placeholder="Add Query" value={query} onChange={(e) => setQuery(e.target.value)} />
                         </Label>
                     </div>
-                    <div className={tailwindWrapper("flex justfiy-content items-center text-sm gap-4")}>
-                        <img src={`${urlStatic()}link.svg`} alt="Link" className={tailwindWrapper("w-8 h-8")} />
-                        <span>Attach link of your query page.</span>
-                    </div>
+                    <button type="button" onClick={handleLink} >
+                        <div className={tailwindWrapper("flex justfiy-content items-center text-sm gap-4 mb-3")}>
+                            <svg width="30" height="11" viewBox="0 0 30 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12.2164 1.01123H6.09162C3.55466 1.01123 1.49805 2.55369 1.49805 4.45641V6.75319C1.49805 8.65596 3.55466 10.1984 6.09162 10.1984H12.2164M10.6852 5.6048H19.8723M18.3411 1.01123H24.4659C27.0029 1.01123 29.0595 2.55369 29.0595 4.45641V6.75319C29.0595 8.65596 27.0029 10.1984 24.4659 10.1984H18.3411" stroke="#6435C9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <span>Attach link of your query page.</span>
+                        </div>
+                    </button>
+                    {linkInput && (
+                        <div className={tailwindWrapper("form-group")}>
+                            <input type='text' value={link} className={tailwindWrapper("shadow appearance-none border rounded w-full py-2 px-3 placeholder-[#BFBFBFDE] leading-tight focus:outline-none focus:shadow-outline")} placeholder="Link" onChange={(e) => setLink(e.target.value)}></input>
+                        </div>
+                    )}
                     <button type="button" className={tailwindWrapper(`flex justify-content gap-1 border border-2 my-5 rounded-md ${themeText[theme]} ${themeBorder[theme]} inline-block py-2 pl-5 pr-6 rounded focus:outline-none focus:shadow-outline`)}
-                    onClick={handleUpload}>
+                        onClick={handleUpload}>
                         <UploadIcon />
                         <span>Upload</span>
                     </button>
@@ -150,7 +168,7 @@ const AddQuery = ({ history, appList, AddIssue, SetAppList, paginationIndex}) =>
                                     />
                                     <div className={tailwindWrapper("absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 flex items-center justify-center")}>
                                         <button className={tailwindWrapper("text-red")} onClick={removeImage}>
-                                            <CrossIcon dimension={"w-8 h-8"}/>
+                                            <CrossIcon dimension={"w-8 h-8"} />
                                         </button>
                                     </div>
                                 </div>
@@ -160,38 +178,39 @@ const AddQuery = ({ history, appList, AddIssue, SetAppList, paginationIndex}) =>
                                         <a href={fileSrc} target="_blank" className={tailwindWrapper("text-blue-500 hover:underline")}>{uploadedFile.name}</a>
                                     </span>
                                     <button className={tailwindWrapper("text-red-500")} onClick={removeImage}>
-                                        <CrossIcon dimension={"w-6 h-6"}/>
+                                        <CrossIcon dimension={"w-6 h-6"} />
                                     </button>
                                 </div>
                             )}
-                    </div>
-                )}
-                <button type="button" className={tailwindWrapper(`flex justify-content gap-1  my-5 rounded-md ${themeText[theme]} ${themeBg[theme]} text-md text-white font-bold inline-block py-2 pl-5 pr-6 rounded-md focus:outline-none focus:shadow-outline mr-0 ml-auto ${(!query || !app || !subject) && "cursor-not-allowed opacity-50"}`)} disabled={!query || !app || !subject} 
-                onClick={handleSubmit}>
-                    <SubmitIcon />
-                    <span>Submit</span>
-                </button>
+                        </div>
+                    )}
+                    <button type="button" className={tailwindWrapper(`flex justify-content gap-1  my-5 rounded-md ${themeText[theme]} ${themeBg[theme]} text-md text-white font-bold inline-block py-2 pl-5 pr-6 rounded-md focus:outline-none focus:shadow-outline mr-0 ml-auto ${(!query || !app || !subject || !relatedTag) && "cursor-not-allowed opacity-50"}`)} disabled={!query || !app || !subject || !relatedTag}
+                        onClick={handleSubmit}>
+                        <SubmitIcon />
+                        <span>Submit</span>
+                    </button>
                 </form>
             </div>
         </div>
-    )}
-  
+    )
+}
+
 const mapStateToProps = (state) => {
-  return {
-    paginationIndex: state.paginationIndex,
-    appList: state.appList
-  }
+    return {
+        paginationIndex: state.paginationIndex,
+        appList: state.appList
+    }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    AddIssue: (data, index, status, successCallBack, errCallback) => {
-      dispatch(addIssue(data, index, status, successCallBack, errCallback))
-    },
-    SetAppList: () => {
-      dispatch(setAppList())
+    return {
+        AddIssue: (data, index, status, successCallBack, errCallback) => {
+            dispatch(addIssue(data, index, status, successCallBack, errCallback))
+        },
+        SetAppList: () => {
+            dispatch(setAppList())
+        }
     }
-  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddQuery)

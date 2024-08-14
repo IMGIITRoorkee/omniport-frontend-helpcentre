@@ -4,9 +4,9 @@ import { themeText } from "../constants/theme"
 import { getTheme } from 'formula_one'
 
 export const PendingIcon = ({ isActive, fill, stroke }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill={fill || (isActive ? "red" : "none")} viewBox="0 0 24 24" strokeWidth={isActive ? "2.5" : "1.5"} stroke={stroke || (isActive ? "white" : "black")} className={tailwindWrapper("w-6 h-6")}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-  </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill={fill || (isActive ? "red" : "none")} viewBox="0 0 24 24" strokeWidth={isActive ? "2.5" : "1.5"} stroke={stroke || (isActive ? "white" : "black")} className={tailwindWrapper("w-6 h-6")}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+    </svg>
 )
 
 export const ResolvedIcon = () => (
@@ -52,9 +52,9 @@ export const ChevronDoubleRight = () => (
     </svg>
 )
 
-export const ShieldIcon = ({color}) => (
+export const ShieldIcon = ({ color }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={tailwindWrapper(`${color} w-6 h-6 inline-block`)}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />  
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
     </svg>
 )
 
@@ -83,7 +83,7 @@ export const QuestionIcon = () => (
 
 )
 
-export const CrossIcon = ({dimension}) => (
+export const CrossIcon = ({ dimension }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" className={tailwindWrapper(dimension)}>
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
     </svg>
@@ -104,5 +104,17 @@ export const CommentIcon = () => (
 export const TickCircleIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={tailwindWrapper("w-6 h-6")}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    </svg>
+)
+
+export const DropdownIcon = () => (
+    <svg width="17" height="13" viewBox="0 0 17 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8.64984 12.3C8.30094 12.2982 7.95681 12.2188 7.64242 12.0675C7.32802 11.9163 7.05125 11.6969 6.83217 11.4253L1.07851 4.45533C0.742297 4.03572 0.530726 3.53011 0.467902 2.9961C0.405077 2.46209 0.493527 1.92118 0.723172 1.435C0.90942 1.01246 1.21336 0.652465 1.59868 0.398004C1.98401 0.143543 2.43444 0.00537517 2.89617 0L14.4035 0C14.8652 0.00537517 15.3157 0.143543 15.701 0.398004C16.0863 0.652465 16.3903 1.01246 16.5765 1.435C16.8062 1.92118 16.8946 2.46209 16.8318 2.9961C16.769 3.53011 16.5574 4.03572 16.2212 4.45533L10.4675 11.4253C10.2484 11.6969 9.97166 11.9163 9.65726 12.0675C9.34287 12.2188 8.99874 12.2982 8.64984 12.3Z" fill="#8D8D8D" />
+    </svg>
+)
+
+export const ReportIssueFlag = () => (
+    <svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0.166992 14V0H7.16699L7.4781 1.64706H11.8337V9.88235H6.38921L6.0781 8.23529H1.72255V14H0.166992Z" fill="#6435C9" />
     </svg>
 )
