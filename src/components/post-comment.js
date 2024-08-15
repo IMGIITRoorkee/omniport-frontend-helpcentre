@@ -1,119 +1,78 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { Form, Button, TextArea, Segment } from 'semantic-ui-react'
 
-import {
-  addComment,
-  addCommentChangeStatus,
-  changeStatusActiveIssue
-} from '../actions'
 import { MaintainerView } from 'formula_one'
-import inline from 'formula_one/src/css/inline.css'
+import { CommentIcon, PendingIcon, TickCircleIcon } from './icons'
+import { tailwindWrapper } from "formula_one/src/utils/tailwindWrapper"
+import { addComment, addCommentChangeStatus, changeStatusActiveIssue } from '../actions'
 
-class PostComment extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      text: '',
-      closed: this.props.isClosed
+const PostComment = ({ activeIssue, queryId, AddComment, AddCommentChangeStatus, ChangeStatusActiveIssue }) => {
+    const [text, setText] = useState('') 
+    const handleChange = (e) => {
+        setText(e.target.value)
     }
-  }
-  handleChange = e => {
-    const name = e.target.name
-    this.setState({
-      [name]: e.target.value
-    })
-  }
-  comment = () => {
-    this.props.AddComment(this.props.queryId, this.state.text)
-    this.setState({
-      text: ''
-    })
-  }
-  commentChangeStatus = () => {
-    this.props.AddCommentChangeStatus(
-      this.props.queryId,
-      this.state.text,
-      !this.props.activeIssue['isClosed']
-    )
-    this.setState({
-      text: ''
-    })
-  }
-  openIssue = () => {
-    this.props.ChangeStatusActiveIssue(this.props.queryId, false)
-    this.setState({
-      text: ''
-    })
-  }
 
-  render() {
-    const { text } = this.state
+    const comment = () => {
+        AddComment(queryId, text)
+        setText('')
+    }
+
+    const commentChangeStatus = () => {
+        AddCommentChangeStatus(queryId, text, !activeIssue.isClosed)
+        setText('')
+    }
+
+    const openIssue = () => {
+        ChangeStatusActiveIssue(queryId, false)
+        setText('')
+    }
+
+    const commonStyle = `border-2 py-2 px-4 flex items-center px-3 py-2 gap-2`
     return (
-      <Form encType='multiple/form-data'>
-        <TextArea
-          placeholder='Add a comment to thread...'
-          rows={3}
-          autoHeight
-          name='text'
-          value={text}
-          onChange={this.handleChange}
-          styleName='inline.margin-bottom-half'
-        />
-        <Button.Group basic compact floated='right'>
-          <MaintainerView which='helpcentre'>
-            <Button
-              onClick={
-                this.props.activeIssue['isClosed']
-                  ? this.openIssue
-                  : this.commentChangeStatus
-              }
-              disabled={!text && !this.props.activeIssue['isClosed']}
-              content={
-                this.props.activeIssue['isClosed']
-                  ? 'Mark pending'
-                  : 'Comment and close'
-              }
-              basic
-              secondary
-              icon='check circle'
-            />
-          </MaintainerView>
-          <Button
-            primary
-            onClick={this.comment}
-            disabled={!text}
-            content='Comment'
-            icon='comment outline'
-            basic
-          />
-        </Button.Group>
-      </Form>
+        <div className={tailwindWrapper("max-w-xl")}>
+            <textarea placeholder="Add a comment to thread..." disabled={activeIssue.isClosed} rows={3} className={tailwindWrapper("w-full p-2 border mb-2 resize-none focus:outline-none focus:shadow-outline")} name="text" value={text} onChange={handleChange}/>
+            <div className={tailwindWrapper("flex items-center justify-end")}>
+                <div className={tailwindWrapper("flex items-stretch")}>
+                    <MaintainerView which="helpcentre">
+                        <button
+                            onClick={activeIssue.isClosed ? openIssue : commentChangeStatus}
+                            disabled={(!activeIssue.isClosed && text.trim() === '')}
+                            className={tailwindWrapper(`${commonStyle} ${(text.trim() === '' && !activeIssue.isClosed) && "opacity-50"} rounded-l-md border-gray-600 text-black-500`)}
+                        >
+                            {activeIssue.isClosed ? <PendingIcon isActive={true} /> : <TickCircleIcon />}
+                            {activeIssue.isClosed ? 'Mark pending' : 'Comment and close'}
+                        </button>
+                    </MaintainerView>
+                    <button
+                        onClick={comment}
+                        disabled={text.trim() === '' || activeIssue.isClosed}
+                        className={tailwindWrapper(`${commonStyle} ${text.trim() === '' && "opacity-50"} rounded-r-md border-blue-300 text-blue-500`)}
+                    >
+                        <CommentIcon />
+                        Comment
+                    </button>
+                </div>
+            </div>
+        </div>
     )
-  }
 }
 
-function mapStateToProps(state) {
-  return {
+const mapStateToProps = (state) => ({
     whoAmI: state.whoAmI,
-    activeIssue: state.activeIssue
-  }
-}
+    activeIssue: state.activeIssue,
+})
 
 const mapDispatchToProps = dispatch => {
-  return {
-    AddComment: (id, text) => {
-      dispatch(addComment(id, text))
-    },
-    AddCommentChangeStatus: (id, text, newStatus) => {
-      dispatch(addCommentChangeStatus(id, text, newStatus))
-    },
-    ChangeStatusActiveIssue: (id, newStatus) => {
-      dispatch(changeStatusActiveIssue(id, newStatus))
+    return {
+        AddComment: (id, text) => {
+            dispatch(addComment(id, text))
+        },
+        AddCommentChangeStatus: (id, text, newStatus) => {
+            dispatch(addCommentChangeStatus(id, text, newStatus))
+        },
+        ChangeStatusActiveIssue: (id, newStatus) => {
+            dispatch(changeStatusActiveIssue(id, newStatus))
+        }
     }
-  }
 }
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PostComment)
+export default connect( mapStateToProps, mapDispatchToProps)(PostComment)

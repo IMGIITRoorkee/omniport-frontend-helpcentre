@@ -1,117 +1,87 @@
-import React, { Component } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
-import { Icon, Input, Pagination } from 'semantic-ui-react'
-import { MobileView, BrowserView } from 'react-device-detect'
+import { BrowserView, MobileView } from 'react-device-detect'
 
+import Pagination from './pagination'
+import { tailwindWrapper } from "formula_one/src/utils/tailwindWrapper"
 import { setIssueList, changePage, setUser, setStatusNumbers } from '../actions'
 
-class TabPagination extends Component {
-  componentDidMount () {
-    this.props.SetUser()
-    this.props.SetStatusNumbers()
-    this.props.SetIssueList(1, 'opened')
-  }
+const TabPagination = ({ issueList, page, SetUser, SetStatusNumbers, SetIssueList, ChangePage }) => {
+	const inputRef = useRef(null)
+	const [activePage, setActivePage ] = useState(1)
+	const [totalPages, setTotalPages] = useState(1)
 
-  handleRef = c => {
-    this.inputRef = c
-  }
+	useEffect(() => {
+		setTotalPages(Math.ceil(issueList['count'] / 10))
+	}, [issueList])
 
-  handlePageChange = (event, data) => {
-    this.props.ChangePage(data['activePage'], this.props.page['status'])
-    this.props.SetIssueList(data['activePage'], this.props.page['status'])
-  }
+	useEffect(() => {
+		setActivePage(page.index)
+	}, [page])
+	
+	useEffect(() => {
+		SetUser()
+		SetStatusNumbers()
+	}, [SetUser, SetStatusNumbers])
 
-  handleInputChange = event => {
-    this.props.ChangePage(event.target.value, this.props.page['status'])
-    this.props.SetIssueList(event.target.value, this.props.page['status'])
-  }
+	const handlePageChange = (activePage) => {
+		if(activePage < 1 || activePage > totalPages) 
+			return
+		ChangePage(activePage, page.status)
+		SetIssueList(activePage, page.status)
+		setActivePage(activePage)
+	}
 
-  handleKeyPress = event => {
-    if (event.key === 'Enter') {
-      this.props.ChangePage(event.target.value, this.props.page['status'])
-      this.props.SetIssueList(event.target.value, this.props.page['status'])
-      this.inputRef.blur()
+	const handleInputChange = (event) => {
+		ChangePage(event.target.value, page.status)
+		SetIssueList(event.target.value, page.status)
+  	}
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+			ChangePage(event.target.value, page.status)
+			SetIssueList(event.target.value, page.status)
+			inputRef.current.blur()
+        }
     }
-  }
-  render () {
+
     return (
-      <React.Fragment>
-        <BrowserView>
-          <Pagination
-            activePage={this.props.page['index'] && this.props.page['index']}
-            totalPages={
-              this.props.issueList
-                ? Math.ceil(this.props.issueList['count'] / 10)
-                : '1'
-            }
-            onPageChange={this.handlePageChange}
-            firstItem={{
-              'aria-label': 'First item',
-              content: <Icon name='angle double left' />,
-              key: '1'
-            }}
-            prevItem={{
-              'aria-label': 'Previous item',
-              content: <Icon name='angle left' />,
-              key: '4'
-            }}
-            nextItem={{
-              'aria-label': 'Next item',
-              content: <Icon name='angle right' />,
-              key: '3'
-            }}
-            lastItem={{
-              'aria-label': 'Last item',
-              content: <Icon name='angle double right' />,
-              key: '2'
-            }}
-          />
-        </BrowserView>
-        <MobileView>
-          <Input
-            type='number'
-            placeholder={this.props.page['index'] && this.props.page['index']}
-            style={{ width: '4em' }}
-            onKeyPress={this.handleKeyPress}
-            ref={this.handleRef}
-          />
-          {' of '}
-          {this.props.issueList
-            ? Math.ceil(this.props.issueList['count'] / 10)
-            : '1'}
-        </MobileView>
-      </React.Fragment>
-    )
-  }
+    <>
+		<div className={tailwindWrapper('flex items-center justify-end p-4')}>
+			<BrowserView>
+				<Pagination totalPages={totalPages} activePage={activePage} onPageChange={handlePageChange}/>
+			</BrowserView>
+			<MobileView>
+				<div className={tailwindWrapper('flex items-center')}>
+					<input
+						type="number"
+						placeholder={page.index}
+						onKeyPress={handleKeyPress}
+						ref={inputRef}
+						className={tailwindWrapper('border p-1 text-center focus:outline-none w-14')}
+					/>
+					<span className={tailwindWrapper('mx-2')}>
+						of {Math.ceil(issueList.count / 10)}
+					</span>
+				</div>
+			</MobileView>
+		</div>
+    </>
+  )
 }
 
-function mapStateToProps (state) {
-  return {
-    whoAmI: state.whoAmI,
-    issueList: state.issueList,
-    page: state.paginationIndex,
-    statusNumbers: state.statusNumbers
-  }
-}
+const mapStateToProps = (state) => ({
+	whoAmI: state.whoAmI,
+	issueList: state.issueList,
+	page: state.paginationIndex,
+	statusNumbers: state.statusNumbers,
+})
 
-const mapDispatchToProps = dispatch => {
-  return {
-    SetUser: () => {
-      dispatch(setUser)
-    },
-    SetIssueList: (id, status) => {
-      dispatch(setIssueList(id, status))
-    },
-    ChangePage: (index, status) => {
-      dispatch(changePage(index, status))
-    },
-    SetStatusNumbers: () => {
-      dispatch(setStatusNumbers())
-    }
-  }
-}
+const mapDispatchToProps = (dispatch) => ({
+    SetUser: () => dispatch(setUser),
+    SetIssueList: (id, status) => dispatch(setIssueList(id, status)),
+    ChangePage: (index, status) => dispatch(changePage(index, status)),
+    SetStatusNumbers: () => dispatch(setStatusNumbers()),
+})
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TabPagination)
+export default connect(mapStateToProps, mapDispatchToProps)(TabPagination)
